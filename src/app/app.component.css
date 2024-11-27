@@ -1,0 +1,232 @@
+.booking-container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .sidebar {
+    width: 250px;
+    background-color: #002855;
+    color: white;
+    padding: 20px;
+    position: fixed; /* ใช้ fixed เพื่อให้ Sidebar อยู่ในที่เดียว */
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+  }
+  
+  .sidebar h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    font-size: 16px;
+  }
+  
+  .sidebar ul li {
+    margin-bottom: 20px;
+  }
+  
+  .sidebar button  {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+  }
+  
+  .sidebar button  img {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+  }
+  
+  .sidebar button.active {
+    background-color: #007bff;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 15px;
+  }
+
+  .content {
+    flex: 1;
+    overflow-x: auto;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    margin-left: 250px; /* จัดให้เนื้อหามี margin ด้านซ้าย เมื่อ sidebar เปิด */
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    background-color: #023e7d;
+    padding: 20px;
+    
+  }
+  
+  .header input {
+    width: 300px;
+    padding: 10px 30px 10px 10px; /* เพิ่ม padding ด้านขวาเพื่อให้ไอคอนไม่ทับข้อความ */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #000;
+  }
+  
+  .search-container {
+    margin-left: 260px; /* กำหนดระยะห่างจาก sidebar (ควรมากกว่า width ของ sidebar) */
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .header input {
+  
+    width: 300px;
+    padding: 10px 10px 10px 40px; /* เพิ่ม padding-left เพื่อให้ข้อความไม่ทับไอคอน */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #000;
+  }
+  
+  .search-icon {
+    font-size: 18px; /* ขนาดของไอคอน */
+    color: #000000; /* สีของไอคอน */
+    position: absolute;
+    left: 10px; /* จัดตำแหน่งให้ไอคอนอยู่ที่ด้านซ้ายของ input */
+  }
+  
+  .header input::placeholder {
+    color: #dddd;
+  }
+  .header .actions {
+    display: flex;
+    align-items: center;
+  }
+
+  .btn-new {
+    background-color: #0F80F6;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 16px; /* ขนาดฟอนต์ข้อความ */
+    margin-left: 10px;
+  }
+  
+  .btn-new i {
+    font-size: 15px; /* ปรับขนาดไอคอนให้ใหญ่ขึ้น */
+  }
+  .profile-circle {
+    width: 40px;
+    height: 40px;
+    background-color: #ffffff;
+    border-radius: 50%;
+  }
+
+  .hamburger {
+    display: none; /* Show hamburger on mobile */
+  }
+  /* For smaller screens (mobile view) */
+  @media only screen and (max-width: 768px) {
+    .sidebar {
+      left: -250px; /* ซ่อน sidebar ไว้ข้างนอก */
+      transition: transform 0.3s ease;
+    }
+  
+    .sidebar.open  {
+      transform: translateX(250px); /* แสดง sidebar เมื่อเปิด */
+    }
+  
+    .btn-new-booking {
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 13px;
+      margin: 20px;
+    }
+    
+    /* ปรับขนาดฟอนต์ใน sidebar */
+    .sidebar h2{
+      font-size: 15px; /* ปรับให้เล็กลง */
+    }
+  
+    .sidebar ul li a {
+      font-size: 12px; /* ปรับให้เล็กลง */
+    }
+  
+    .content {
+      overflow-x: hidden;
+      margin-left: 0; /* ปรับให้เนื้อหาเต็มหน้าจอเมื่อ sidebar ถูกซ่อน */
+    }
+  
+    /* ลดขนาด font ในเนื้อหา */
+    .header input {
+      width: 100%; /* ขยายช่องค้นหาให้เต็มหน้าจอ */
+      font-size: 12px; /* ลดขนาดฟอนต์ในช่องค้นหา */
+    }
+  
+    /* ทำให้ตารางสามารถเลื่อนแนวนอนได้เมื่อมีเนื้อหามากเกิน */
+    .table-container{
+      overflow-x: auto; /* เพิ่ม scroll แนวนอน */
+      font-size: 10px; /* ลดขนาดฟอนต์ในตาราง */
+      flex: 1;
+    }
+  
+    .table-container-header{
+      justify-content: flex-start;
+      align-content: center;
+    
+    }
+  
+    .table-container h1 {
+      font-size: 15px; /* ปรับให้เล็กลง */
+      margin-bottom: 10px;
+      align-content: center;
+      margin: 0;
+    }
+    .status {
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 10px;
+      text-align: center;
+    }
+    /* ปรับขนาดปุ่มใน pagination */
+    .pagination button {
+      padding: 2px 5px; /* ปรับให้ปุ่มเล็กลง */
+    }
+  
+    .pagination  {
+      right: inherit;
+    }
+  
+    /* ปรับขนาดฟอนต์ในตาราง */
+    th,
+    td {
+      font-size: 10px; /* ลดขนาดฟอนต์ในตาราง */
+      padding-left: 20px; /* ลด padding ในตาราง */
+    }
+  
+    .search-container {
+        margin-left: 0; 
+        position: relative;
+        display: flex;
+        align-items: center; /* จัดตำแหน่งให้ไอคอนและข้อความอยู่กลางแนวตั้ง */
+      }
+    /* Show hamburger menu only in mobile view */
+    .hamburger {
+      font-size: 30px;
+      padding-left: 0;
+      background: none;
+      border: none;
+      color: #ffffff;
+      cursor: pointer;
+      display: block; /* Show hamburger on mobile */
+    }
+  }
+  

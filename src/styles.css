@@ -1,1 +1,21 @@
-/* You can add global styles to this file, and also import other style files */
+* {
+    font-family: "Prompt", sans-serif;
+  }
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* ใช้ box-sizing แบบ border-box */
+  width: 100%;
+  height: 100%;
+ 
+}
+
+/* ทำให้ทุกองค์ประกอบใช้ box-sizing แบบ border-box */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+

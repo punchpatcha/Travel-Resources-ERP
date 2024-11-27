@@ -1,12 +1,25 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  standalone: true,
+  imports: [RouterModule],
+  templateUrl: './app.component.html', 
+  styleUrls: ['./app.component.css'] 
 })
 export class AppComponent {
-  title = 'travel-inventory-management';
+  isSidebarOpen = false;
+
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
+
+  closeSidebar(event: Event) {
+    // ปิด sidebar ถ้าคลิกข้างนอก (แต่ไม่ปิดถ้าคลิก sidebar หรือ hamburger menu)
+    const target = event.target as HTMLElement;
+    if (!target.closest('.sidebar') && !target.closest('.hamburger')) {
+      this.isSidebarOpen = false;
+    }
+  }
 }

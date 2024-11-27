@@ -1,1 +1,141 @@
-<p>add-booking works!</p>
+<div class="main-container">
+  <!-- Header Section -->
+  <div class="header">
+    <h2>New Booking</h2>
+    <div class="actions">
+      <button class="btn gray">Save</button>
+      <button class="btn gray">Delete</button>
+    </div>
+  </div>
+  <hr />
+
+  <!-- Form Section -->
+  <div class="content">
+    <div class="form-container">
+      <form>
+        <div class="form-group">
+          <label for="customerName">
+            Customer Name<span class="required">*</span>
+          </label>
+          <input
+            id="customerName"
+            type="text"
+            [(ngModel)]="bookingData.customerName"
+            name="customerName"
+          />
+        </div>
+        <div class="form-group">
+          <label for="details"> Details<span class="required">*</span> </label>
+          <div class="details-dropdown" (click)="openDetailsModal()">
+            <span>{{
+              selectedDetails.length > 0
+                ? selectedDetails.join(", ")
+                : "Select Details"
+            }}</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="startDate">
+            Start Date<span class="required">*</span>
+          </label>
+          <input
+            id="startDate"
+            type="date"
+            [(ngModel)]="bookingData.startDate"
+            name="startDate"
+          />
+        </div>
+        <div class="form-group">
+          <label for="endDate"> End Date<span class="required">*</span> </label>
+          <input
+            id="endDate"
+            type="date"
+            [(ngModel)]="bookingData.endDate"
+            name="endDate"
+          />
+        </div>
+        <div class="form-group">
+          <label for="status"> Status<span class="required">*</span> </label>
+          <select id="status" [(ngModel)]="bookingData.status" name="status">
+            <option *ngFor="let status of statuses" [value]="status">
+              {{ status }}
+            </option>
+          </select>
+        </div>
+      </form>
+    </div>
+
+    <!-- ส่วนแสดงผลทางด้านขวา -->
+    <div class="result-section">
+      <div>
+        <h3>{{ bookingData.customerName || "Booking Summary" }}</h3>
+      </div>
+      <div>
+        <p>
+          Details:
+          {{
+            selectedDetails.length > 0
+              ? selectedDetails.join(", ")
+              : "Not Selected"
+          }}
+        </p>
+      </div>
+      <div *ngFor="let item of selectedChecklist">
+        <p>
+          {{ item.name }}
+          <span class="quantity">x{{ item.quantity }}</span>
+        </p>
+      </div>
+      <div>
+        <p>Start Date: {{ bookingData.startDate || "-" }}</p>
+        <p>End Date: {{ bookingData.endDate || "-" }}</p>
+        <p>Status: {{ bookingData.status || "-" }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" *ngIf="isModalOpen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Vehicle</h3>
+        <div class="actions">
+          <button class="btn blue" (click)="saveSelection()">Save</button>
+          <i class="close-icon" (click)="closeModal()">×</i>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Select</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Capacity</th>
+            <th>Status</th>
+            <th>Plate Number</th>
+            <th>Last Used</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of currentItems">
+            <td>
+              <input
+                type="checkbox"
+                (change)="toggleSelection(item, $event)"
+                [checked]="selectedDetails.includes(item.name)"
+              />
+            </td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.category }}</td>
+            <td>{{ item.capacity }}</td>
+            <td [ngClass]="{ 'status-available': item.status === 'Available' }">
+              {{ item.status }}
+            </td>
+            <td>{{ item.plateNumber }}</td>
+            <td>{{ item.lastUsed }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -22,8 +22,6 @@
 
   .table-container {
     background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
   
   .table-container-header {
@@ -114,7 +112,7 @@
   
   .pagination {
     display: flex;
-    justify-content: right;
+    justify-content: center;
     align-items: center;
     margin-top: 20px;
     padding-right: 20px;

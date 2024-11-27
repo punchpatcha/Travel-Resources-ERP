@@ -7,5 +7,5 @@ export const appRoutes: Routes = [
   { path: '', redirectTo: 'resource', pathMatch: 'full' }, // ตั้งหน้าเริ่มต้นเป็น Resource
   { path: 'resource', component: ResourceComponent },
   { path: 'booking', component: BookingComponent },
-  { path: 'addBooking', component: AddBookingComponent },
+  { path: 'booking/add', component: AddBookingComponent },
 ];

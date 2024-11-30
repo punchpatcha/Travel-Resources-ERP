@@ -4,6 +4,7 @@ import { BookingComponent } from './booking/booking.component';
 import { AddBookingComponent } from './add-booking/add-booking.component';
 import { AddVehiclesComponent } from './add-vehicles/add-vehicles.component';
 import { AddEquipmentComponent } from './add-equipment/add-equipment.component';
+import { AddStaffComponent } from './add-staff/add-staff.component';
 
 export const appRoutes: Routes = [
   { path: '', redirectTo: 'resource', pathMatch: 'full' }, // ตั้งหน้าเริ่มต้นเป็น Resource
@@ -12,4 +13,5 @@ export const appRoutes: Routes = [
   { path: 'booking/add', component: AddBookingComponent },
   { path: 'vehicles/add', component: AddVehiclesComponent },
   { path: 'equipment/add', component: AddEquipmentComponent },
+  {path: 'staff/add', component: AddStaffComponent},
 ];

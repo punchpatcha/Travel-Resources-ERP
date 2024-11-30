@@ -5,6 +5,9 @@ const cors = require('cors');
 const path = require('path');
 const connectDB = require('./db');
 
+const bookingRouter = require('./routes/booking.route');
+app.use('/api/bookings', bookingRouter);
+
 // เชื่อมต่อ MongoDB
 
 connectDB();

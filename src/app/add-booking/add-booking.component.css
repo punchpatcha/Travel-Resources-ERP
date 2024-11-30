@@ -1,23 +1,65 @@
 /* General Layout */
 .main-container {
   padding: 20px;
+  margin-bottom: 50px;
 }
 .content {
   display: flex;
   justify-content: space-between;
+
+
 }
 .form-container {
   width: 50%; /* ลดขนาดให้เหมาะสม */
+
+
 }
 .result-section {
   width: 45%; /* ให้มีพื้นที่แสดงผล */
-  padding: 10px;
   border-left: 1px solid #ccc;
   border-radius: 4px;
-  margin-left: 30px;
+  margin-left: 20px;
+  padding: 0px 30px;
+  font-size: 13px;
+  font-weight: 400;
+  text-align: left;
 }
-td.status-available {
-  color: #77BFA3;
+
+.result-section h3 {
+  font-size: 16px;
+  font-weight: 400;
+  text-align: left;
+}
+
+.result-section a {
+  font-size: 13px;
+  font-weight: 400;
+  color: #5B5B5B;
+}
+
+.result-section p {
+  font-size: 13px;
+  font-weight: 400;
+  color: #000000;
+}
+
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  color: #007bff;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.back-button i {
+  font-size: 18px;
+}
+
+.back-button:hover {
+  color: #0056b3;
 }
 
 .header {
@@ -28,6 +70,8 @@ td.status-available {
 
 .header h2 {
   margin: 0;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .actions .btn {
@@ -36,44 +80,109 @@ td.status-available {
   border-radius: 4px;
   border: none;
   cursor: pointer;
+ 
+}
+
+.actions i {
+  margin-left: 10px;
+  cursor: pointer;
 }
 
 .btn.gray {
-  background-color: #ccc;
+  background-color: #CECECE;
   color: #333;
+  font-size:13px;
+  font-weight: 400;
+}
+
+.btn.blue {
+  background-color: #0F80F6;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 400;
+ 
 }
 
 hr {
   margin: 20px 0;
-  border-color: #ddd;
+  border: 0.3px solid #cecece82;
 }
 
 /* Form Section */
 .form-container {
   width: 60%;
+  
+}
+
+input.name{
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #CECECE;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 400;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 50px;
 }
 
+/* ทำให้ dropdown แสดงข้างล่าง */
+.form-group select {
+  width: 100%;               /* ให้ความกว้างพอดีกับฟอร์ม */
+  padding: 8px;              /* เพิ่ม padding ให้ดูสวย */
+  border: 1px solid #cccccc; /* กรอบสีเทา */
+  border-radius: 4px;        /* มุมมน */
+  background-color: white;   /* พื้นหลังสีขาว */
+  appearance: none;          /* ลบลูกศรเริ่มต้น */
+  cursor: pointer;
+}
+
+
+
 label {
-  font-weight: bold;
+  font-size: 13px;
+  font-weight: 400;
   display: block;
   margin-bottom: 5px;
+  color: #5B5B5B;
 }
 
 .required {
   color: red;
 }
 
-input,
-select {
+input.start,input.end {
   width: 100%;
   padding: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #CECECE;
   border-radius: 4px;
+  font-size: 13px;
+  font-weight: 400;
 }
+
+select{
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #CECECE;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.details-dropdown{
+  width: 100%;
+  padding: 20px;
+  border: 1px solid #CECECE;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.details-dropdown.filled, input {
+  color: black; /* สีข้อความเมื่อมีการเลือกค่า */
+}
+
 
 /* Summary Section */
 .summary {
@@ -84,11 +193,15 @@ select {
 .details-section,
 .list-section {
   margin-bottom: 15px;
+  font-size: 13px;
+  font-weight: 400;
 }
 
 .quantity {
   float: right;
-  color: #555;
+  font-size: 13px;
+  font-weight: 400;
+  color: #5B5B5B;
 }
 
 /* Modal */
@@ -102,6 +215,7 @@ select {
   display: flex;
   justify-content: center;
   align-items: center;
+ 
 }
 
 .modal-content {
@@ -109,31 +223,133 @@ select {
   width: 80%;
   padding: 20px;
   border-radius: 8px;
+  margin-left: 250px;
 }
 
-.modal-header {
+.modal-header, h3 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 16px;
+  font-weight: 400;
+  color: #5B5B5B;
+  
+}
+.dropdown-container {
+  position: relative;
+  display: inline-block;
 }
 
-.close-icon {
-  font-size: 20px;
+.dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px;
+  border: none;
+  gap: 20px;
+
+}
+.fa-solid{
+  color: #0F80F6;
+}
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  z-index: 10;
+  font-size: 13px;
   cursor: pointer;
 }
+
+.dropdown-menu option {
+  cursor: pointer;
+  padding: 10px;
+}
+
+.dropdown-menu option:hover {
+  background-color: #cce5ff;
+  color: rgb(0, 0, 0);
+}
+.dropdown-menu option.active {
+  background-color: #007bff;
+  color: white;
+}
+
+
+.fa-chevron-down {
+  pointer-events: none; /* Icon ไม่ทำงานเมื่อกด */
+}
+
+.status-green {
+  color: #77BFA3;
+}
+
+/* สีฟ้าสำหรับ In Use */
+.status-blue {
+  color: #0F80F6;
+}
+
+/* สีส้มสำหรับ Pending */
+.status-orange {
+  color: #FA8B29;
+}
+
+/* สีเหลืองสำหรับ Pending*/
+.status-yellow {
+  color: #F69459;
+}
+
 
 table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 13px;
+  font-weight: 400;
 }
 
 thead th {
-  background: #f9f9f9;
   text-align: left;
+  font-size: 13px;
+  font-weight: 400;
   padding: 8px;
+  border-bottom: 1.5px solid #CECECE;
+  border-top: 1px solid #CECECE;
 }
 
 tbody td {
   padding: 8px;
-  border: 1px solid #ddd;
 }
+
+td {
+  color: #5B5B5B;
+}
+
+input.checkbox{
+margin: 0px 10px;
+}
+td.status-available {
+  color: #77BFA3;
+}
+
+@media only screen and (max-width: 768px) {
+  .modal-content {
+    background: #fff;
+    width: 80%;
+    padding: 20px;
+    border-radius: 8px;
+    margin-left: 0;
+    overflow-x: auto;
+  }
+
+
+}
+

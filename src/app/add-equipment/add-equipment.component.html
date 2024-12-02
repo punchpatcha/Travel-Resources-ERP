@@ -1,6 +1,9 @@
 <div class="container">
     <!-- Header -->
     <div class="header">
+      <div class="back-button" (click)="goBack()">
+        <i class="fa-solid fa-arrow-left"></i> 
+      </div>
       <h2 class="title">New Item</h2>
       <div class="actions">
         <button class="btn save">Save</button>
@@ -18,9 +21,10 @@
         </div>
         <div class="form-group">
           <label for="category">Category<span class="required">*</span></label>
-          <select id="category" [(ngModel)]="equipment.category" name="category" required>
+          <select id="category" [(ngModel)]="equipment.category" name="category" required (change)="onCategoryChange()">
             <option value="">Select a category</option>
-            <!-- Add category options here -->
+            <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+            <option value="add-new">Add New Category</option>
           </select>
         </div>
         <div class="form-group">
@@ -33,10 +37,9 @@
         </div>
         <div class="form-group">
           <label for="status">Status<span class="required">*</span></label>
-          <select id="status" [(ngModel)]="equipment.status" name="status" required>
+          <select id="status" [(ngModel)]="equipment.status" name="status" required (ngModelChange)="onStatusChange($event)">
             <option value="Available">Available</option>
-            <option value="In Use">In Use</option>
-            <option value="Under Maintenance">Under Maintenance</option>
+            <option value="Maintenance">Maintenance</option>
           </select>
         </div>
         <div class="form-group">
@@ -44,9 +47,63 @@
           <input type="date" id="maintenanceDate" [(ngModel)]="equipment.maintenanceDate" name="maintenanceDate" />
         </div>
       </form>
-      <div class="image-section">
-        <div class="image-placeholder">
-          <span>Browse image</span>
+      <div class="right-column">
+        <div class="image-section">
+          <div class="image-placeholder" (click)="onBrowseImage()">
+            <!-- ถ้ามีการเลือกภาพแล้ว ให้แสดงภาพที่เลือก -->
+            <img *ngIf="previewImage" [src]="previewImage" alt="Selected Image" />
+            <!-- ถ้ายังไม่มีการเลือกภาพ แสดงข้อความและไอคอน -->
+            <div *ngIf="!previewImage" class="browse-container">
+              <span class="browse-text">Browse image</span>
+              <img class="upload-icon" src="upload-icon.png" alt="Upload Icon" />
+            </div>
+          </div>
+          <!-- ปุ่มเลือกไฟล์ที่ซ่อนอยู่ -->
+          <input
+            type="file"
+            id="imageUpload"
+            (change)="onImageSelected($event)"
+            accept="image/*"
+            hidden
+          />
+            <!-- ถ้าผู้ใช้เลือกภาพแล้ว แสดงปุ่มถังขยะ -->
+    <div *ngIf="previewImage" class="trash-container" (click)="removeImage()">
+      <img class="trash-icon" src="upload-icon.png" alt="Delete Image" />
+    </div>
+        </div>
+  
+        <!-- Form Data Container จะถูกแสดงเมื่อกรอกครบ -->
+        <div class="form-data-container" *ngIf="isFormValid()">
+          <h3>{{ equipment.name }}</h3>
+          <ul>
+            <li>
+              <strong>Category</strong>
+              <span>{{ equipment.category }}</span>
+            </li>
+            <li>
+              <strong>totalUnit</strong>
+              <span>{{ equipment.totalUnit }}</span>
+            </li>
+            <li>
+              <strong>Status</strong>
+              <span [ngClass]="getStatusClass(equipment.status)">
+                {{ equipment.status }}
+              </span>
+            </li>
+            <li>
+              <strong>Maintenance Date</strong>
+              <span>{{ equipment.maintenanceDate }}</span>
+            </li>
+          </ul>
+  
+          <div *ngIf="previewImage">
+            <h4>Uploaded Image:</h4>
+            <img
+              [src]="previewImage"
+              alt="Uploaded Image"
+              style="max-width: 100%; height: auto; border-radius: 4px;"
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 // routes/booking.route.js
 const express = require('express');
 const router = express.Router();
-const bookingController = require('../controllers/bookingController');
+const bookingController = require('../routes/bookingController');
 
 // POST: Create a new booking
 router.post('/', bookingController.createBooking);

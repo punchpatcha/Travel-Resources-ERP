@@ -67,7 +67,7 @@
   }
   
   .form-section {
-    flex: 1;
+    flex: 0 0 50%;
   }
   
   .form-group {
@@ -85,23 +85,209 @@
     border: 2px solid #ddd;
     border-radius: 6px;
   }
+
+  .right-column {
+    flex: 1;
+    flex-direction: column; /* ให้ image-section อยู่บนและ form-data อยู่ล่าง */
+    gap: 20px; /* ระยะห่างระหว่าง image-section กับ form-data */
+  }
   
   .image-section {
-    flex: 0 0 50%; 
+    flex: 1; /* ให้ขนาดยืดหยุ่นเป็น 50% ของพื้นที่ */
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: #f4f4f4;
     border: 1px solid #ddd;
     border-radius: 8px;
-    min-height: 400px;
-    height: 50%;
+    min-height: 150px; /* กำหนดความสูงขั้นต่ำ */
+    height: 40%; /* กำหนดความสูง 50% ของ container */
     text-align: center;
     margin: 30px 0px;
+    overflow: hidden; /* ซ่อนส่วนเกินที่อยู่นอกกรอบ */
+    position: relative; /* ให้รูปภาพสามารถครอบคลุมพื้นที่ได้ */
 }
 
 .image-placeholder {
     font-size: 1rem;
     color: #888;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute; /* ให้วางทับภาพ */
+    width: 100%;
+    height: 100%;
 }
-  
+
+.image-placeholder img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 4px;
+    object-fit: cover; /* ให้รูปภาพเต็มพื้นที่ */
+}
+
+.browse-container {
+    display: flex;
+    flex-direction: column; /* ทำให้ข้อความและไอคอนเรียงกันในแนวตั้ง */
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    z-index: 1; /* ให้ข้อความอยู่เหนือภาพ */
+}
+
+.browse-text {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    transition: color 0.3s ease; /* เพิ่มเอฟเฟกต์เมื่อ hover */
+}
+
+.upload-icon {
+    opacity: 0; /* ซ่อนโดยปกติ */
+    transition: opacity 0.3s ease; /* เพิ่มเอฟเฟกต์การแสดง */
+    margin-top: 8px; /* เพิ่มระยะห่างระหว่างข้อความและไอคอน */
+}
+
+/* เอฟเฟกต์ hover เฉพาะข้อความและไอคอน */
+.browse-container:hover .browse-text {
+    color: #f4f4f4; /* เปลี่ยนสีข้อความเมื่อ hover */
+}
+
+.browse-container:hover .upload-icon {
+    opacity: 1; /* แสดงไอคอนเมื่อ hover */
+}
+
+/* ซ่อนข้อความและไอคอนเมื่อมีรูปภาพ */
+.image-placeholder img + .browse-container {
+    display: none; /* ซ่อนข้อความและไอคอนเมื่อมีภาพ */
+}
+
+.trash-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.trash-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.form-data-container {
+  margin-top: 5px;
+  padding-right: 50px;
+}
+
+.form-data-container h3 {
+  font-size: 20px;
+  margin-bottom: 16px;
+  font-weight: bold;
+}
+
+.form-data-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.form-data-container ul li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 16px;
+  margin-bottom: 50px;
+}
+
+.form-data-container ul li strong {
+  color: #5B5B5B;
+  font-weight: 500;
+}
+
+.form-data-container ul li span {
+  color: #000000;
+  text-align: right;
+}
+
+/* สไตล์สำหรับ Available */
+.form-data-container ul li span.status-available {
+  color: #77BFA3; /* สีเขียว */
+}
+
+/* สไตล์สำหรับ Under Maintenance */
+.form-data-container ul li span.status-maintenance {
+  color: #FF0043; /* สีแดง */
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal Box */
+.modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Modal Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-body {
+  margin-top: 15px;
+}
+
+button.close-button {
+  border: none;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  color: #007bff;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.back-button i {
+  font-size: 18px;
+}
+
+.back-button:hover {
+  color: #0056b3;
+}

@@ -90,6 +90,8 @@ export class ResourceComponent {
       this.router.navigate(['/vehicles/add']);
     } else if (this.selectedView === 'equipment') {
       this.router.navigate(['/equipment/add']); 
+    } else if(this.selectedView == 'staff'){
+      this.router.navigate(['/equipment/add'])
     }
   }
   

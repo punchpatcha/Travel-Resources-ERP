@@ -73,27 +73,27 @@
     text-align: center;
   }
   
-  .status.returned {
+  .status-returned {
     color: #77BFA3;
     background-color: rgb(223, 255, 243);
   }
   
-  .status.booked {
+  .status-booked {
     color: #fa8621;
     background-color: #ffebd7;
   }
   
-  .status.pending {
+  .status-pending {
     color: #f49459;
     background-color: #fff4e6;
   }
   
-  .status.in-use {
+  .status-in-use {
     color: #0F80F6;
     background-color: #e3f1ff;
   }
   
-  .status.canceled {
+  .status-canceled {
     color: #FF0000;
     background-color: #ffe6e6;
   }

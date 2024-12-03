@@ -1,28 +1,31 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 const connectDB = require('./db');
-
 const bookingRouter = require('./routes/booking.route');
-app.use('/api/bookings', bookingRouter);
+const resourceRoutes = require('./routes/resource.route');
 
-// เชื่อมต่อ MongoDB
-
-connectDB();
 
 // สร้างแอป Express
 const app = express();
 
+// เชื่อมต่อ MongoDB
+connectDB();
+
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // ใช้เส้นทางสำหรับไฟล์ที่อัปโหลด
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Middleware for handling errors
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ message: 'Internal Server Error' });
+});
 
-// ใช้ router สำหรับจัดการทรัพยากร
-const resourceRouter = require('./routes/resource');
-app.use('/api/resources', resourceRouter);
+// ใช้ router
+app.use('/api/bookings', bookingRouter);
+app.use('/api/resources', resourceRoutes); // ของ add-booking
 
 // ตั้งค่าหน้า root
 app.get('/', (req, res) => {

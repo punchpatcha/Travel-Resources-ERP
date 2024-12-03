@@ -1,30 +1,21 @@
+// routes/booking.route.js
 const express = require('express');
-const Booking = require('../model/Booking');
-
 const router = express.Router();
+const bookingController = require('../controllers/bookingController');
 
-// ดึงข้อมูลทั้งหมด
-router.get('/', async (req, res) => {
-  try {
-    const bookings = await Booking.find();
-    res.json(bookings);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
+// POST: Create a new booking
+router.post('/', bookingController.createBooking);
 
-// เพิ่มข้อมูล booking ใหม่
-router.post('/', async (req, res) => {
-  const { bookingId, customerName, details, startDate, endDate, status } = req.body;
+// GET: Retrieve all bookings
+router.get('/', bookingController.getAllBookings);
 
-  const newBooking = new Booking({ bookingId, customerName, details, startDate, endDate, status });
+// GET: Retrieve a specific booking by ID
+router.get('/:id', bookingController.getBookingById);
 
-  try {
-    const savedBooking = await newBooking.save();
-    res.status(201).json(savedBooking);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
+// PUT: Update a booking by ID
+router.put('/:id', bookingController.updateBooking);
+
+// DELETE: Delete a booking by ID
+router.delete('/:id', bookingController.deleteBooking);
 
 module.exports = router;

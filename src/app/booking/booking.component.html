@@ -22,8 +22,8 @@
               <td>{{ booking.bookingId }}</td>
               <td>{{ booking.customerName }}</td>
               <td>{{ booking.details }}</td>
-              <td>{{ booking.startDate }}</td>
-              <td>{{ booking.endDate }}</td>
+              <td>{{ booking.startDate | date:'dd/MM/yyyy' }}</td>
+              <td>{{ booking.endDate | date:'dd/MM/yyyy' }}</td>
               <td>
                 <span class="status" [ngClass]="getStatusClass(booking.status)">
                   {{ booking.status }}

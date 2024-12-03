@@ -1,8 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Location } from '@angular/common';
+import { Router } from '@angular/router';
+import { BookingService, Booking } from '../services/booking.service';
+import { ResourceService, Resource } from '../services/resource.service';
 
 @Component({
   selector: 'app-add-booking',
@@ -11,116 +14,46 @@ import { Location } from '@angular/common';
   imports: [CommonModule, RouterModule, FormsModule],
   styleUrls: ['./add-booking.component.css'],
 })
-export class AddBookingComponent {
-  bookingData = {
+export class AddBookingComponent implements OnInit {
+  bookingData: Booking = {
+    bookingId: '',
     customerName: '',
+    details: '',
     startDate: '',
     endDate: '',
-    status: '',
+    status: 'Pending',
   };
 
-  constructor(private location: Location) {}
-
-  goBack(): void {
-    this.location.back(); // นำทางกลับไปยังหน้าก่อนหน้า
-  }
   statuses = ['Pending', 'Booked', 'In Use', 'Returned'];
-  
-  // Dropdown categories
+
   categories = ['Vehicles', 'Equipment', 'Staff'];
   currentCategory = 'Vehicles';
   isDropdownOpen = false;
 
-  // Dynamic table headers and fields
   tableHeaders: string[] = [];
   tableFields: string[] = [];
   currentItems: any[] = [];
-  // Toggle dropdown menu
-  toggleDropdown() {
-    this.isDropdownOpen = !this.isDropdownOpen;
-  }
 
-  // Select category from dropdown
-  selectCategory(category: string) {
-    this.currentCategory = category;
-    this.isDropdownOpen = false;
-    this.updateTable();
-  }
-  // Predefined data for each category
-  vehicles = [
-    {
-      name: 'Toyota Camry',
-      category: 'Car',
-      capacity: 5,
-      status: 'Available',
-      plateNumber: 'AB-1234',
-      lastUsed: '2024-11-01',
-    },
-    {
-      name: 'Hyundai H-1',
-      category: 'Van',
-      capacity: 10,
-      status: 'Available',
-      plateNumber: 'XY-5678',
-      lastUsed: '2024-10-15',
-    },
-    {
-      name: '30 Seater Bus',
-      category: 'Bus',
-      capacity: 30,
-      status: 'Available',
-      plateNumber: 'ZP-9876',
-      lastUsed: '2024-09-20',
-    },
-  ];
-
-  equipment = [
-    {
-      name: 'Laptop',
-      category: 'Electronics',
-      availableUnits: 5,
-      totalUnits: 10,
-      status: 'Available',
-      lastUsed: '2024-11-15',
-    },
-    {
-      name: 'Projector',
-      category: 'AV Equipment',
-      availableUnits: 2,
-      totalUnits: 5,
-      status: 'In Use',
-      lastUsed: '2024-11-10',
-    },
-  ];
-
-  staff = [
-    {
-      name: 'John Doe',
-      role: 'Driver',
-      contact: '123-456-7890',
-      status: 'Available',
-      lastAssignment: '2024-11-20',
-    },
-    {
-      name: 'Jane Smith',
-      role: 'Guide',
-      contact: '098-765-4321',
-      status: 'In Use',
-      lastAssignment: '2024-11-18',
-    },
-  ];
-
-  // Modal state
   isModalOpen = false;
   selectedDetails: string[] = [];
-  selectedChecklist: { name: string; quantity: number }[] = [];
+selectedChecklist: { name: string; category: string; quantity: number }[] = [];
+
+  constructor(
+    private location: Location,
+    private bookingService: BookingService,
+    private resourceService: ResourceService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    this.updateTable(); // Initialize the table
+    this.updateTable();
+    
   }
 
   openDetailsModal() {
     this.isModalOpen = true;
+    this.loadItems(this.currentCategory);
+    console.log('Modal opened. Current category:', this.currentCategory);
   }
 
   closeModal() {
@@ -129,17 +62,74 @@ export class AddBookingComponent {
 
   saveSelection() {
     console.log('Selected Checklist:', this.selectedChecklist);
+  
+    // รวมข้อมูลที่เลือกใน checklist ไปยัง bookingData
+    this.bookingData.details = this.selectedChecklist.map(item => item.category).join(', ');
     this.closeModal();
   }
+  
 
-  // Change category and update table
+  saveBooking() {
+    // สร้าง bookingId โดยใช้วัน เดือน ปี ในการสร้าง ID
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // เดือนเริ่มต้นจาก 0
+    const year = String(today.getFullYear()).slice(-2); // ดึงปีสุดท้าย 2 หลัก
+  
+    this.bookingData.bookingId = `BK-${day}/${month}/${year}`;
+  
+    // เรียกใช้ service เพื่อบันทึกข้อมูลการจองใน MongoDB
+    this.bookingService.addBooking(this.bookingData).subscribe(
+      (response) => {
+        console.log('Booking saved successfully:', response);
+        this.router.navigate(['/booking']);
+      },
+      (error) => {
+        console.error('Error saving booking:', error);
+      }
+    );
+  }
+  
+        
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+    console.log('Modal opened. Current category:', this.currentCategory);
+  }
+
+  selectCategory(category: string) {
+    this.loadItems(this.currentCategory);
+    this.currentCategory = category;
+    this.isDropdownOpen = false;
+    this.updateTable();
+  }
+
   changeCategory(event: any) {
+    this.loadItems(this.currentCategory);
     this.currentCategory = event.target.value;
     this.updateTable();
   }
 
-  // Update table headers and fields based on category
+  loadItems(category: string) {
+    this.resourceService.getAvailableResources().subscribe(
+      (data) => {
+        console.log('All data loaded:', data); // ตรวจสอบข้อมูลทั้งหมดที่โหลดมา
+        this.currentItems = data.filter(
+          (item) =>
+            item.type.toLowerCase() === this.currentCategory.toLowerCase() &&
+            item.status === 'Available'
+        );
+
+        console.log('Filtered data loaded:', this.currentItems);
+        this.updateTable();
+      },
+      (error) => {
+        console.error('Error loading items:', error);
+      }
+    );
+  }
+
   updateTable() {
+    // Update table headers and fields based on currentCategory
     if (this.currentCategory === 'Vehicles') {
       this.tableHeaders = [
         'Name',
@@ -157,7 +147,6 @@ export class AddBookingComponent {
         'plateNumber',
         'lastUsed',
       ];
-      this.currentItems = this.vehicles;
     } else if (this.currentCategory === 'Equipment') {
       this.tableHeaders = [
         'Name',
@@ -175,7 +164,6 @@ export class AddBookingComponent {
         'status',
         'lastUsed',
       ];
-      this.currentItems = this.equipment;
     } else if (this.currentCategory === 'Staff') {
       this.tableHeaders = [
         'Name',
@@ -191,27 +179,32 @@ export class AddBookingComponent {
         'status',
         'lastAssignment',
       ];
-      this.currentItems = this.staff;
     }
   }
 
   toggleSelection(item: any, event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
-
+  
     if (isChecked) {
-      // Add item to selectedChecklist if not already added
-      if (!this.selectedDetails.includes(item.name)) {
-        this.selectedDetails.push(item.name);
-        this.selectedChecklist.push({ name: item.name, quantity: 1 });
+      if (!this.selectedDetails.includes(item.category)) {
+        this.selectedDetails.push(item.category);
+        this.selectedChecklist.push({ category: item.category, name: item.name, quantity: 1 });
       }
     } else {
-      // Remove item from selectedChecklist
       this.selectedDetails = this.selectedDetails.filter(
-        (detail) => detail !== item.name
+        (detail) => detail !== item.category
       );
       this.selectedChecklist = this.selectedChecklist.filter(
-        (checklistItem) => checklistItem.name !== item.name
+        (checklistItem) => checklistItem.category !== item.category
       );
     }
+  }
+
+  goBack(): void {
+    this.location.back();
+  }
+
+  isSelected(item: any): boolean {
+    return this.selectedDetails.includes(item.name);
   }
 }

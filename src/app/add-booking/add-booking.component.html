@@ -6,7 +6,7 @@
     </div>
     <h2>New Booking</h2>
     <div class="actions">
-      <button class="btn blue">Save</button>
+      <button class="btn blue" (click)="saveBooking()">Save</button>
       <button class="btn gray">Delete</button>
     </div>
   </div>
@@ -26,6 +26,7 @@
             type="text"
             [(ngModel)]="bookingData.customerName"
             name="customerName"
+            required 
           />
         </div>
         <div class="form-group">
@@ -52,6 +53,7 @@
             type="date"
             [(ngModel)]="bookingData.startDate"
             name="startDate"
+            required 
           />
         </div>
         <div class="form-group">
@@ -62,6 +64,7 @@
             type="date"
             [(ngModel)]="bookingData.endDate"
             name="endDate"
+            required 
           />
         </div>
         <div class="form-group">
@@ -71,6 +74,7 @@
             id="status"
             [(ngModel)]="bookingData.status"
             name="status"
+            required 
           >
             <option *ngFor="let status of statuses" [value]="status">
               {{ status }}
@@ -98,9 +102,9 @@
         </a>
       </div>
       <div>
-        <p>Start Date: {{ bookingData.startDate || "-" }}</p>
-        <p>End Date: {{ bookingData.endDate || "-" }}</p>
-        <p>
+        <p>Start Date: {{ bookingData.startDate ? (bookingData.startDate | date:'dd/MM/yyyy') : "-" }}</p>
+        <p>End Date: {{ bookingData.endDate ? (bookingData.endDate | date:'dd/MM/yyyy') : "-" }}</p>
+                <p>
           Status:
           <span
             [ngClass]="{
@@ -158,22 +162,25 @@
                 class="checkbox"
                 type="checkbox"
                 (change)="toggleSelection(item, $event)"
-                [checked]="selectedDetails.includes(item.name)"
-              />
+                [checked]="selectedDetails.includes(item.category)"              />
             </td>
             <td *ngFor="let field of tableFields">
-              <span
-                *ngIf="field === 'status'"
-                [ngClass]="{
-                  'status-green': item[field] === 'Available',
-                }"
-              >
-                {{ item[field] }}
+              <span *ngIf="field === 'status'">
+                <span [ngClass]="{
+                  'status-green': item[field] === 'Available'
+                }">
+                  {{ item[field] }}
+                </span>
               </span>
-              <span *ngIf="field !== 'status'">
+              <span *ngIf="field === 'lastUsed'">
+                {{ item[field] ? (item[field] | date:'dd/MM/yyyy') : '-' }}
+              </span>
+              <span *ngIf="field !== 'status' && field !== 'lastUsed'">
                 {{ item[field] }}
               </span>
             </td>
+            
+            
           </tr>
         </tbody>
       </table>

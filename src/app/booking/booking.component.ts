@@ -20,9 +20,15 @@ export class BookingComponent {
   fetchBookings() {
     this.http.get<any[]>('http://localhost:3000/api/bookings')
       .subscribe((data) => {
-        this.bookings = data; // ตั้งค่าข้อมูลที่ดึงมาให้กับ bookings
+        // Map data to include only categories from details
+        this.bookings = data.map(booking => {
+          const parsedDetails = JSON.parse(booking.details || '[]'); // แปลง JSON String กลับเป็น Array
+          const categories = Array.from(new Set(parsedDetails.map((item: any) => item.category))); // ดึง category
+          return { ...booking, details: categories.join(', ') }; // เก็บ category เป็น String
+        });
       });
   }
+  
 
   getStatusClass(status: string): string {
     switch (status) {

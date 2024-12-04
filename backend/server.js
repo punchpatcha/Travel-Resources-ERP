@@ -6,7 +6,6 @@ const connectDB = require('./db');
 const bookingRouter = require('./routes/booking.route');
 const resourceRoutes = require('./routes/resource.route');
 
-
 // สร้างแอป Express
 const app = express();
 
@@ -32,6 +31,17 @@ app.get('/', (req, res) => {
     res.send('Welcome to the Travel Resources ERP');
 });
 
+app.put('/api/resources/:id', (req, res) => {
+    const { id } = req.params;
+    const updates = req.body;
+  
+    Resource.findByIdAndUpdate(id, updates, { new: true })
+      .then(updatedResource => res.json(updatedResource))
+      .catch(err => res.status(500).send(err));
+  });
+  
+
+  
 // เริ่มต้น server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

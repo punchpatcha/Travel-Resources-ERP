@@ -1,1 +1,208 @@
-<p>booking-edit works!</p>
+<div class="main-container">
+  <div *ngIf="isLoading" class="loading-overlay">
+    <i class="fa fa-spinner fa-spin"></i>
+  </div>
+  <!-- Header Section -->
+
+  <div class="header">
+    <div class="back-button" (click)="goBack()">
+      <i class="fa-solid fa-arrow-left"></i>
+    </div>
+    <h2>{{ bookingData.bookingId }}</h2>
+    <div class="actions">
+      <button class="btn blue" (click)="saveBooking()">Save</button>
+      <button class="btn gray" (click)="deleteBooking()">Delete</button>
+    </div>
+  </div>
+  <hr />
+
+  <!-- Form Section -->
+  <div class="content">
+    <div class="form-container">
+      <form>
+        <div class="form-group">
+          <label for="customerName">
+            Customer Name<span class="required">*</span>
+          </label>
+          <input
+            class="name"
+            id="customerName"
+            type="text"
+            [(ngModel)]="bookingData.customerName"
+            name="customerName"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="details"> Details<span class="required">*</span> </label>
+          <div
+            class="details-dropdown"
+            [class.filled]="selectedDetails.length > 0"
+            (click)="openDetailsModal()"
+          >
+            <span>
+              {{
+                selectedDetails.length > 0 ? selectedDetails.join(", ") : " "
+              }}
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="startDate">
+            Start Date<span class="required">*</span>
+          </label>
+          <input
+            class="start"
+            id="startDate"
+            type="date"
+            [(ngModel)]="bookingData.startDate"
+            name="startDate"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="endDate"> End Date<span class="required">*</span> </label>
+          <input
+            class="end"
+            id="endDate"
+            type="date"
+            [(ngModel)]="bookingData.endDate"
+            name="endDate"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="status"> Status<span class="required">*</span> </label>
+          <select
+            class="dropdown-status"
+            id="status"
+            [(ngModel)]="bookingData.status"
+            name="status"
+            required
+          >
+            <option *ngFor="let status of statuses" [value]="status">
+              {{ status }}
+            </option>
+          </select>
+        </div>
+      </form>
+    </div>
+
+    <!-- ส่วนแสดงผลทางด้านขวา -->
+    <div class="result-section">
+      <div>
+        <h3>{{ bookingData.customerName }}</h3>
+      </div>
+      <div>
+        <p>
+          Details:
+          {{ selectedDetails.length > 0 ? selectedDetails.join(", ") : "-" }}
+        </p>
+      </div>
+      <div *ngFor="let item of selectedChecklist">
+        <a>
+          {{ item.name }}
+          <span class="quantity">x{{ item.quantity }}</span>
+        </a>
+      </div>
+      <div>
+        <p>
+          Start Date:
+          {{
+            bookingData.startDate
+              ? (bookingData.startDate | date : "dd/MM/yyyy")
+              : "-"
+          }}
+        </p>
+        <p>
+          End Date:
+          {{
+            bookingData.endDate
+              ? (bookingData.endDate | date : "dd/MM/yyyy")
+              : "-"
+          }}
+        </p>
+        <p>
+          Status:
+          <span
+            [ngClass]="{
+              'status-blue': bookingData.status === 'In Use',
+              'status-yellow': bookingData.status === 'Pending',
+              'status-green': bookingData.status === 'Returned',
+              'status-orange': bookingData.status === 'Booked'
+            }"
+          >
+            {{ bookingData.status || "-" }}
+          </span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" *ngIf="isModalOpen">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div class="dropdown-container">
+          <div class="dropdown-header" (click)="toggleDropdown()">
+            <span>{{ currentCategory }}</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          <ul *ngIf="isDropdownOpen" class="dropdown-menu">
+            <option
+              *ngFor="let category of categories"
+              (click)="selectCategory(category)"
+              [class.active]="category === currentCategory"
+            >
+              {{ category }}
+            </option>
+          </ul>
+        </div>
+        <div class="actions">
+          <button class="btn blue" (click)="saveSelection()">Save</button>
+          <i class="fa-solid fa-xmark" (click)="closeModal()"></i>
+        </div>
+      </div>
+
+      <!-- Dynamic Table -->
+      <table>
+        <thead>
+          <tr>
+            <th>Select</th>
+            <th *ngFor="let header of tableHeaders">{{ header }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of currentItems">
+            <td>
+              <input
+                class="checkbox"
+                type="checkbox"
+                (change)="toggleSelection(item, $event)"
+                [checked]="isItemChecked(item)"
+              />
+            </td>
+            <td *ngFor="let field of tableFields">
+              <span *ngIf="field === 'status'">
+                <span
+                  [ngClass]="{
+                    'status-green': item[field] === 'Available'
+                  }"
+                >
+                  {{ item[field] }}
+                </span>
+              </span>
+              <span *ngIf="field === 'lastUsed'">
+                {{ item[field] ? (item[field] | date : "dd/MM/yyyy") : "-" }}
+              </span>
+              <span *ngIf="field !== 'status' && field !== 'lastUsed'">
+                {{ item[field] }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

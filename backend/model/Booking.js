@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+//backend\model\Booking.js
+const mongoose = require("mongoose");
 
 const BookingSchema = new mongoose.Schema({
   bookingId: {
@@ -10,10 +11,22 @@ const BookingSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  details: {
-    type: String,
-    required: true,
-  },
+  details: [
+    {
+      type: String, // 'Vehicle', 'Equipment', 'Staff'
+      name: String, // เช่น Toyota, Canon mark III, Punch
+      category: String, // เช่น Car, Camera (หรือ role สำหรับ Staff)
+      quantity: { type: Number, default: 1 }, // จำนวน (เฉพาะ Equipment)
+      status: { type: String, enum: ["Available", "Booked", "In Use"], default: "Available" }, // Status
+      placeNumber: { type: String }, // เฉพาะ Vehicle
+      capacity: { type: Number }, // เฉพาะ Vehicle
+      availableUnits: { type: Number }, // เฉพาะ Equipment
+      totalUnits: { type: Number }, // เฉพาะ Equipment
+      role: { type: String }, // สำหรับ Staff
+      contact: { type: String }, // เฉพาะ Staff
+      lastAssignment: { type: Date }, // เฉพาะ Staff
+    },
+  ],
   startDate: {
     type: Date,
     required: true,
@@ -24,11 +37,11 @@ const BookingSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Returned', 'Booked', 'In Use', 'Canceled', 'Pending'],
-    default: 'Pending',
+    enum: ["Returned", "Booked", "In Use", "Canceled", "Pending"],
+    default: "Pending",
   },
 });
 
-const Booking = mongoose.model('Booking', BookingSchema);
+const Booking = mongoose.model("Booking", BookingSchema);
 
 module.exports = Booking;

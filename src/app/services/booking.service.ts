@@ -1,3 +1,4 @@
+//src\app\services\booking.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -29,8 +30,6 @@ export class BookingService {
     return this.http.post<Booking>(this.apiUrl, booking);
   }
 
-  
-
   // GET: ดึงข้อมูลการจองตาม ID
   getBookingById(id: string): Observable<Booking> {
     return this.http.get<Booking>(`${this.apiUrl}/${id}`);
@@ -42,7 +41,9 @@ export class BookingService {
   }
 
   // DELETE: ลบการจอง
-  deleteBooking(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+  deleteBooking(bookingId: string) {
+    return this.http.delete(`${this.apiUrl}/${bookingId}`);
   }
+  
+  
 }

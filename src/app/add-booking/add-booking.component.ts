@@ -6,6 +6,7 @@ import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { BookingService, Booking } from '../services/booking.service';
 import { ResourceService, Resource } from '../services/resource.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-add-booking',
@@ -15,7 +16,7 @@ import { ResourceService, Resource } from '../services/resource.service';
   styleUrls: ['./add-booking.component.css'],
 })
 export class AddBookingComponent implements OnInit {
-  // ข้อมูลการจองที่ใช้งานในฟอร์ม
+  isLoading = false;
   bookingData: Booking = {
     bookingId: '',
     customerName: '',
@@ -25,23 +26,22 @@ export class AddBookingComponent implements OnInit {
     status: 'Pending',
   };
 
-  // รายการสถานะการจอง
   statuses = ['Pending', 'Booked', 'In Use', 'Returned'];
-
-  // รายการประเภททรัพยากรที่มีให้เลือก
   categories = ['Vehicles', 'Equipment', 'Staff'];
   currentCategory = 'Vehicles';
   isDropdownOpen = false;
 
-  // ชื่อหัวตารางและฟิลด์ที่แสดงในแต่ละประเภท
   tableHeaders: string[] = [];
   tableFields: string[] = [];
   currentItems: any[] = [];
-
-  // การเปิดปิด modal
   isModalOpen = false;
   selectedDetails: string[] = [];
-  selectedChecklist: { name: string; category: string; quantity: number }[] = [];
+  selectedChecklist: {
+    _id: string;
+    name: string;
+    category: string;
+    quantity: number;
+  }[] = [];
 
   constructor(
     private location: Location,
@@ -50,88 +50,82 @@ export class AddBookingComponent implements OnInit {
     private router: Router
   ) {}
 
-  // ฟังก์ชันที่เรียกเมื่อคอมโพเนนต์เริ่มต้น
   ngOnInit() {
     this.updateTable();
   }
 
-  // ฟังก์ชันเปิด modal เพื่อเลือกข้อมูล
   openDetailsModal() {
     this.isModalOpen = true;
     this.loadItems(this.currentCategory);
     console.log('Modal opened. Current category:', this.currentCategory);
   }
 
-  // ฟังก์ชันปิด modal
   closeModal() {
     this.isModalOpen = false;
   }
 
-  // ฟังก์ชันบันทึกข้อมูลการเลือกใน checklist ไปยัง bookingData
   saveSelection() {
     console.log('Selected Checklist:', this.selectedChecklist);
-    this.bookingData.details = this.selectedChecklist.map(item => item.category).join(', ');
+    this.bookingData.details = this.selectedChecklist
+      .map((item) => `${item.name} x${item.quantity}`)
+      .join(', ');
     this.closeModal();
   }
 
-  // ฟังก์ชันบันทึกข้อมูลการจอง
   saveBooking() {
-    // สร้าง bookingId โดยใช้วัน เดือน ปี และเวลาปัจจุบันในการสร้าง ID
+    this.isLoading = true;
     const today = new Date();
-    const day = String(today.getDate()).padStart(2, '0');
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const year = String(today.getFullYear()).slice(-2);
-    const hours = String(today.getHours()).padStart(2, '0');
-    const minutes = String(today.getMinutes()).padStart(2, '0');
-    const seconds = String(today.getSeconds()).padStart(2, '0');
+    const bookingId = `BK-${today.getDate()}${today.getMonth() + 1}${today.getFullYear()}${today.getHours()}${today.getMinutes()}${today.getSeconds()}`;
+    this.bookingData.bookingId = bookingId;
+    this.bookingData.details = JSON.stringify(this.selectedChecklist);
   
-    // สร้าง bookingId ในรูปแบบ BK-DDMMYYHHMMSS
-    this.bookingData.bookingId = `BK-${day}${month}${year}${hours}${minutes}${seconds}`;
-  
-    // เรียกใช้ service เพื่อบันทึกข้อมูลการจองใน MongoDB
     this.bookingService.addBooking(this.bookingData).subscribe(
       (response) => {
         console.log('Booking saved successfully:', response);
+        this.isLoading = false;
         this.router.navigate(['/booking']);
       },
       (error) => {
         console.error('Error saving booking:', error);
+        this.isLoading = false;
       }
     );
   }
   
-
-  // ฟังก์ชัน toggle เพื่อเปิดปิด dropdown เลือกประเภทใน modal
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
-    console.log('Modal opened. Current category:', this.currentCategory);
+    console.log('Dropdown toggled. Current category:', this.currentCategory);
   }
 
-  // ฟังก์ชันเลือกประเภทและโหลดข้อมูลที่เกี่ยวข้องมาแสดง
   selectCategory(category: string) {
-    this.loadItems(this.currentCategory);
     this.currentCategory = category;
     this.isDropdownOpen = false;
+    this.loadItems(category);
     this.updateTable();
   }
 
-  // ฟังก์ชันเปลี่ยนประเภทและโหลดข้อมูลใหม่
   changeCategory(event: any) {
-    this.loadItems(this.currentCategory);
     this.currentCategory = event.target.value;
+    this.loadItems(this.currentCategory);
     this.updateTable();
   }
 
-  // ฟังก์ชันโหลดข้อมูลทรัพยากรที่ว่างอยู่ตามประเภทที่เลือก
   loadItems(category: string) {
     this.resourceService.getAvailableResources().subscribe(
       (data) => {
-        console.log('All data loaded:', data);
         this.currentItems = data.filter(
           (item) =>
             item.type.toLowerCase() === this.currentCategory.toLowerCase() &&
             item.status === 'Available'
         );
+
+        // ตรวจสอบและทำให้สถานะ checkbox ตรงกับ selectedChecklist
+        this.currentItems.forEach((item) => {
+          item.isSelected = this.selectedChecklist.some(
+            (check) => check._id === item._id
+          );
+        });
+
         console.log('Filtered data loaded:', this.currentItems);
         this.updateTable();
       },
@@ -141,57 +135,95 @@ export class AddBookingComponent implements OnInit {
     );
   }
 
-  // ฟังก์ชันอัปเดตหัวตารางและฟิลด์ตามประเภทที่เลือก
   updateTable() {
     if (this.currentCategory === 'Vehicles') {
       this.tableHeaders = [
-        'Name', 'Category', 'Capacity', 'Status', 'Plate Number', 'Last Used',
+        'Name',
+        'Category',
+        'Capacity',
+        'Status',
+        'Plate Number',
+        'Last Used',
       ];
       this.tableFields = [
-        'name', 'category', 'capacity', 'status', 'plateNumber', 'lastUsed',
+        'name',
+        'category',
+        'capacity',
+        'status',
+        'plateNumber',
+        'lastUsed',
       ];
     } else if (this.currentCategory === 'Equipment') {
       this.tableHeaders = [
-        'Name', 'Category', 'Available Units', 'Total Units', 'Status', 'Last Used',
+        'Name',
+        'Category',
+        'Available Units',
+        'Total Units',
+        'Status',
+        'Last Used',
       ];
       this.tableFields = [
-        'name', 'category', 'availableUnits', 'totalUnits', 'status', 'lastUsed',
+        'name',
+        'category',
+        'availableUnits',
+        'totalUnits',
+        'status',
+        'lastUsed',
       ];
     } else if (this.currentCategory === 'Staff') {
       this.tableHeaders = [
-        'Name', 'Role', 'Contact', 'Status', 'Last Assignment',
+        'Name',
+        'Role',
+        'Contact',
+        'Status',
+        'Last Assignment',
       ];
       this.tableFields = [
-        'name', 'role', 'contact', 'status', 'lastAssignment',
+        'name',
+        'role',
+        'contact',
+        'status',
+        'lastAssignment',
       ];
     }
   }
 
-  // ฟังก์ชันตรวจสอบการเลือก item ใน checklist
   toggleSelection(item: any, event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
+
     if (isChecked) {
-      if (!this.selectedDetails.includes(item.category)) {
-        this.selectedDetails.push(item.category);
-        this.selectedChecklist.push({ category: item.category, name: item.name, quantity: 1 });
+      if (!this.selectedChecklist.some((check) => check._id === item._id)) {
+        this.selectedChecklist.push({
+          _id: item._id,
+          name: item.name,
+          category: item.category,
+          quantity: 1, // ค่าเริ่มต้นของจำนวน
+        });
       }
     } else {
-      this.selectedDetails = this.selectedDetails.filter(
-        (detail) => detail !== item.category
-      );
       this.selectedChecklist = this.selectedChecklist.filter(
-        (checklistItem) => checklistItem.category !== item.category
+        (check) => check._id !== item._id
       );
     }
+
+    // อัปเดต selectedDetails เพื่อแสดง category ที่เลือกทั้งหมด
+    this.updateSelectedDetails();
   }
 
-  // ฟังก์ชันย้อนกลับไปยังหน้าก่อนหน้า
+  // ฟังก์ชันช่วยในการอัพเดท selectedDetails จาก selectedChecklist
+  updateSelectedDetails() {
+    const categories = new Set<string>();
+    this.selectedChecklist.forEach((item) => {
+      categories.add(item.category);
+    });
+    this.selectedDetails = Array.from(categories);
+  }
+
   goBack(): void {
     this.location.back();
   }
 
-  // ฟังก์ชันตรวจสอบว่า item ถูกเลือกหรือไม่
   isSelected(item: any): boolean {
-    return this.selectedDetails.includes(item.name);
+    return this.selectedChecklist.some((check) => check._id === item._id);
   }
 }

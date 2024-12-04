@@ -1,3 +1,5 @@
+// backend\model\Resource.js
+
 const mongoose = require("mongoose");
 
 // สร้าง Schema สำหรับ Resource (รถ, อุปกรณ์, พนักงาน)
@@ -9,7 +11,7 @@ const ResourceSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["Vehicle", "Equipment", "Staff"], // ประเภทหลัก
+      enum: ["Vehicles", "Equipment", "Staff"], // ประเภทหลัก
       required: true,
     },
     category: {
@@ -24,21 +26,21 @@ const ResourceSchema = new mongoose.Schema(
     lastUsed: {
       type: Date,
       required: function () {
-        return this.type === "Vehicle" || this.type === "Equipment";
+        return this.type === "Vehicles" || this.type === "Equipment";
       },
     },
 
     // เฉพาะ Vehicle
-    placeNumber: {
+    plateNumber: {
       type: String,
       required: function () {
-        return this.type === "Vehicle";
+        return this.type === "Vehicles";
       },
     },
     capacity: {
       type: Number,
       required: function () {
-        return this.type === "Vehicle";
+        return this.type === "Vehicles";
       },
     },
     maintenanceDate: {

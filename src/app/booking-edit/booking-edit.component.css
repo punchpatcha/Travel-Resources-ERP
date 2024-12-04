@@ -224,6 +224,7 @@
     padding: 20px;
     border-radius: 8px;
     margin-left: 250px;
+    padding-bottom: 20px;
   }
   
   .modal-header, h3 {
@@ -268,6 +269,7 @@
     z-index: 10;
     font-size: 13px;
     cursor: pointer;
+    
   }
   
   .dropdown-menu option {

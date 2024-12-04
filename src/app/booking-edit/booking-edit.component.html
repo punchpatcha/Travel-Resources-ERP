@@ -187,7 +187,8 @@
               <span *ngIf="field === 'status'">
                 <span
                   [ngClass]="{
-                    'status-green': item[field] === 'Available'
+                    'status-green': item[field] === 'Available',
+                    'status-orange': item[field] === 'Booked'
                   }"
                 >
                   {{ item[field] }}

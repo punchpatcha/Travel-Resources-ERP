@@ -56,5 +56,15 @@ export class ResourceService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
+  createVehicle(vehicle: Resource): Observable<Resource> {
+    return this.http.post<Resource>(`${this.apiUrl}/vehicles`, vehicle);
+  }
   
+  updateVehicle(id: string, updates: Partial<Resource>): Observable<Resource> {
+    return this.http.put<Resource>(`${this.apiUrl}/vehicles/${id}`, updates);
+  }
+  
+  deleteVehicle(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/vehicles/${id}`);
+  }
 }

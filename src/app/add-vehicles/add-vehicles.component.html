@@ -18,12 +18,12 @@
     <form (ngSubmit)="onSubmit()" #vehicleForm="ngForm" class="form-section">
       <div class="form-group">
         <label for="name">Name<span class="required">*</span></label>
-        <input type="text" id="name" [(ngModel)]="vehicles.name" name="name" required />
+        <input type="text" id="name" [(ngModel)]="vehicle.name" name="name" required />
       </div>
       <div class="form-group">
         <label for="category">Category<span class="required">*</span></label>
         <select
-          [(ngModel)]="vehicles.category"
+          [(ngModel)]="vehicle.category"
           (click)="loadCategories()"
           (focus)="loadCategories()"
           (change)="onCategoryChange($event)"
@@ -51,15 +51,15 @@
 
       <div class="form-group">
         <label for="plateNumber">Plate Number<span class="required">*</span></label>
-        <input type="text" id="plateNumber" [(ngModel)]="vehicles.plateNumber" name="plateNumber" required />
+        <input type="text" id="plateNumber" [(ngModel)]="vehicle.plateNumber" name="plateNumber" required />
       </div>
       <div class="form-group">
         <label for="capacity">Capacity<span class="required">*</span></label>
-        <input type="number" id="capacity" [(ngModel)]="vehicles.capacity" name="capacity" required />
+        <input type="number" id="capacity" [(ngModel)]="vehicle.capacity" name="capacity" required />
       </div>
       <div class="form-group">
         <label for="status">Status<span class="required">*</span></label>
-        <select id="status" [(ngModel)]="vehicles.status" name="status" required>
+        <select id="status" [(ngModel)]="vehicle.status" name="status" required>
           <option value="Available">Available</option>
           <option value="Booked">ฺBooked</option>
           <option value="Maintenance">Maintenance</option>
@@ -67,7 +67,7 @@
       </div>
       <div class="form-group">
         <label for="maintenanceDate">Maintenance Date</label>
-        <input type="date" id="maintenanceDate" [(ngModel)]="vehicles.maintenanceDate" name="maintenanceDate" />
+        <input type="date" id="maintenanceDate" [(ngModel)]="vehicle.maintenanceDate" name="maintenanceDate" />
       </div>
     </form>
 
@@ -99,29 +99,29 @@
 
       <!-- Form Data Container จะถูกแสดงเมื่อกรอกครบ -->
       <div class="form-data-container" *ngIf="isFormValid()">
-        <h3>{{ vehicles.name }}</h3>
+        <h3>{{ vehicle.name }}</h3>
         <ul>
           <li>
             <strong>Category</strong>
-            <span>{{ vehicles.category }}</span>
+            <span>{{ vehicle.category }}</span>
           </li>
           <li>
             <strong>Plate Number</strong>
-            <span>{{ vehicles.plateNumber }}</span>
+            <span>{{ vehicle.plateNumber }}</span>
           </li>
           <li>
             <strong>Capacity</strong>
-            <span>{{ vehicles.capacity }}</span>
+            <span>{{ vehicle.capacity }}</span>
           </li>
           <li>
             <strong>Status</strong>
-            <span [ngClass]="getStatusClass(vehicles.status)">
-              {{ vehicles.status }}
+            <span [ngClass]="getStatusClass(vehicle.status)">
+              {{ vehicle.status }}
             </span>
           </li>
           <li>
             <strong>Maintenance Date</strong>
-            <span>{{ vehicles.maintenanceDate }}</span>
+            <span>{{ vehicle.maintenanceDate }}</span>
           </li>
         </ul>
       </div>

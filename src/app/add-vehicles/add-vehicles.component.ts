@@ -1,159 +1,175 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ResourceService } from '../services/resource.service';
-import { HttpClient } from '@angular/common/http';
-
+import { ResourceService, Resource } from '../services/resource.service';
 
 @Component({
-  imports: [CommonModule, FormsModule],
   selector: 'app-add-vehicles',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './add-vehicles.component.html',
   styleUrls: ['./add-vehicles.component.css'],
 })
-export class AddVehiclesComponent {
-  vehicles = {
+export class AddVehiclesComponent implements OnInit {
+  // Vehicle data
+  vehicle: Partial<Resource> = {
     name: '',
+    type: 'Vehicle',
     category: '',
-    plateNumber: '',
-    capacity: 0,
-    status: '',
+    capacity: 1,
+    status: 'Available',
     maintenanceDate: 'null',
-    type: 'vehicle',  // ประเภทนี้เป็น vehicle
-    image: null,
+    plateNumber: '',
+    image: '',
   };
-  
-  categories: string[] = [];
-  newCategory: string = '';
-  showModal: boolean = false;
-  previewImage: string = '';
-  apiUrl: string = 'http://localhost:3000/api/resources';
 
-  constructor(private resourceService: ResourceService,
-    private http: HttpClient,
+  categories: string[] = [];
+  newCategory = '';
+  showModal = false;
+  previewImage: string | null = null;
+
+  constructor(
+    private resourceService: ResourceService,
+    private router: Router
   ) {}
 
+  ngOnInit(): void {
+    this.loadCategories(); // Load categories for vehicles
+  }
+
+  // Load vehicle categories
   loadCategories() {
-    this.http.get<any[]>(this.apiUrl).subscribe(
+    this.resourceService.getAvailableResources({ type: 'Vehicle' }).subscribe(
       (data) => {
-        // กรองเฉพาะรายการที่มี type เป็น 'Vehicles'
-        const vehicleCategories = data.filter((item) => item.type === 'Vehicles');
-  
-        // ดึงข้อมูล category และกรองค่าที่ซ้ำ
         const uniqueCategories = Array.from(
-          new Set(vehicleCategories.map((item) => item.category))
+          new Set(data.map((item) => item.category))
         );
-  
-        // อัปเดตรายการ categories โดยลบค่า null/undefined
-        this.categories = uniqueCategories.filter((category) => !!category);
+        this.categories = uniqueCategories;
+        if (!this.categories.includes('Add new category')) {
+          this.categories.push('Add new category');
+        }
       },
       (error) => {
-        console.error('Error loading categories:', error);
-        alert('ไม่สามารถโหลดหมวดหมู่ได้');
+        console.error('Error fetching categories:', error);
       }
     );
   }
 
-  openModal() {
-    this.showModal = true;
+  // Handle category change
+  onCategoryChange() {
+    if (this.vehicle.category === 'Add new category') {
+      this.showModal = true;
+    }
+  }
+
+  // Add new category
+  addNewCategory() {
+    if (this.newCategory.trim()) {
+      this.categories.unshift(this.newCategory);
+      this.vehicle.category = this.newCategory;
+      this.showModal = false;
+      this.newCategory = '';
+    }
   }
 
   closeModal() {
     this.showModal = false;
-    this.newCategory = ''; // รีเซ็ตหมวดหมู่ใหม่
   }
 
-  addNewCategory() {
-    if (this.newCategory.trim()) {
-      // เพิ่มหมวดหมู่ใหม่เข้าไปในรายการ categories
-      this.categories.push(this.newCategory.trim());
-      // ตั้งค่า category ของ vehicles เป็นหมวดหมู่ใหม่
-      this.vehicles.category = this.newCategory.trim();
-      // ปิด modal
-      this.closeModal();
-    } else {
-      alert('กรุณากรอกชื่อหมวดหมู่');
-    }
-  }
-
-  onCategoryChange(event: Event) {
-    const selectedCategory = (event.target as HTMLSelectElement).value;
-    if (selectedCategory === 'add-new') {
-      this.showModal = true; // แสดง Modal
-    } else {
-      this.vehicles.category = selectedCategory; // กำหนดค่า category
-    }
-  }
-
-  onSubmit() {
-    // Ensure capacity is a valid number (if it's not, set it to 0)
-    const validCapacity = isNaN(this.vehicles.capacity) ? 0 : this.vehicles.capacity;
-  
-    this.resourceService.createVehicle({
-      name: this.vehicles.name,
-      category: this.vehicles.category,
-      plateNumber: this.vehicles.plateNumber,
-      capacity: validCapacity,  // Ensure capacity is a valid number
-      status: this.vehicles.status,
-      maintenanceDate: this.vehicles.maintenanceDate,
-      type: 'vehicle',  // Assuming this is a vehicle, set type accordingly
-      image: this.previewImage ? this.previewImage : null,  // Handle image if present
-      _id: ''  // Passing a dummy value for _id
-    }).subscribe(response => {
-      console.log('Vehicle created:', response);
-    });
-  }
-
-  // ฟังก์ชันสำหรับการเลือกภาพ
-  onBrowseImage() {
-    document.getElementById('imageUpload')?.click();
-  }
-
-  onImageSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
+  // Image handling
+  onImageSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
       const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        this.previewImage = reader.result as string;
+
+      reader.onload = (e: any) => {
+        const image = new Image();
+        image.src = e.target.result;
+
+        image.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          const maxWidth = 800;
+          const maxHeight = 600;
+
+          let width = image.width;
+          let height = image.height;
+
+          if (width > maxWidth || height > maxHeight) {
+            const ratio = Math.min(maxWidth / width, maxHeight / height);
+            width *= ratio;
+            height *= ratio;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          ctx?.drawImage(image, 0, 0, width, height);
+
+          this.previewImage = canvas.toDataURL(file.type);
+          this.vehicle.image = this.previewImage;
+        };
       };
+
+      reader.readAsDataURL(file);
     }
+  }
+
+  onBrowseImage(): void {
+    const fileInput = document.getElementById(
+      'imageUpload'
+    ) as HTMLInputElement;
+    fileInput?.click();
   }
 
   removeImage() {
-    this.previewImage = '';
+    this.previewImage = null;
+    this.vehicle.image = '';
   }
 
-  getStatusClass(status: string): string {
-    // Example: Add classes based on the status value
+  // Get status class for styling
+  getStatusClass(status?: string): string {
     switch (status) {
       case 'Available':
-        return 'status-available';  // Define the class 'status-active' in CSS
-      case 'Booked':
-        return 'status-inactive';  // Define the class 'status-inactive' in CSS
-      case 'Mainenace':
-        return 'status-maintenance';  // Define the class 'status-maintenance' in CSS
+        return 'status-available';
+      case 'Maintenance':
+        return 'status-maintenance';
       default:
-        return 'status-default';  // Default class for undefined status
+        return 'status-default';
     }
   }
 
+  // Validate form fields
   isFormValid(): boolean {
-    console.log(this.vehicles);
-    return (
-      this.vehicles.name !== '' &&
-      this.vehicles.category !== '' &&
-      this.vehicles.plateNumber !== '' &&
-      this.vehicles.capacity > 0 &&
-      this.vehicles.status !== ''
-    );
+    return !!(
+      this.vehicle.name &&
+      this.vehicle.category &&
+      this.vehicle.plateNumber &&
+      this.vehicle.capacity &&
+      this.vehicle.status
+    ) as boolean;
   }
 
-  deleteVehicle(){
-
+  // Save vehicle
+  saveVehicle() {
+    if (this.isFormValid()) {
+      this.resourceService.createResource(this.vehicle as Resource).subscribe(
+        (response) => {
+          console.log('Vehicle added successfully:', response);
+          this.router.navigate(['/resource'], { queryParams: { type: 'vehicle' } });
+        },
+        (error) => {
+          console.error('Error adding vehicle:', error);
+        }
+      );
+    } else {
+      alert('Please fill in all required fields.');
+    }
   }
 
-  goBack(){
-
+  // Navigate back
+  goBack() {
+    this.router.navigate(['/resource'], { queryParams: { type: 'vehicle' } });
   }
 }

@@ -5,6 +5,7 @@ const path = require('path');
 const connectDB = require('./db');
 const bookingRouter = require('./routes/booking.route');
 const resourceRoutes = require('./routes/resource.route');
+const multer = require('multer');
 
 // สร้างแอป Express
 const app = express();
@@ -12,37 +13,50 @@ const app = express();
 // เชื่อมต่อ MongoDB
 connectDB();
 
-// Middleware
+// กำหนดการเก็บไฟล์สำหรับการอัปโหลดภาพ
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  }
+});
+const upload = multer({ storage });
+
+// เส้นทางสำหรับการอัปโหลดภาพ
+app.post('/api/upload', upload.single('image'), (req, res) => {
+  if (req.file) {
+    const filePath = `/uploads/${req.file.filename}`;
+    res.status(200).json({ message: 'อัปโหลดไฟล์สำเร็จ', path: filePath });
+  } else {
+    res.status(400).json({ message: 'ไม่มีไฟล์ที่อัปโหลด' });
+  }
+});
+
+// การตั้งค่า Middleware
+app.use(express.json({ limit: '10mb' })); // กำหนดขนาดสูงสุดของ payload
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cors());
-app.use(bodyParser.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-// Middleware for handling errors
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ message: 'Internal Server Error' });
-});
 
-// ใช้ router
+// ตั้งค่าเส้นทาง
 app.use('/api/bookings', bookingRouter);
-app.use('/api/resources', resourceRoutes); // ของ add-booking
+app.use('/api/resources', resourceRoutes); // ใช้เส้นทาง resource
 
-// ตั้งค่าหน้า root
+// เส้นทางหน้าแรก
 app.get('/', (req, res) => {
-    res.send('Welcome to the Travel Resources ERP');
+  res.send('ยินดีต้อนรับสู่ Travel Resources ERP');
 });
 
-app.put('/api/resources/:id', (req, res) => {
-    const { id } = req.params;
-    const updates = req.body;
-  
-    Resource.findByIdAndUpdate(id, updates, { new: true })
-      .then(updatedResource => res.json(updatedResource))
-      .catch(err => res.status(500).send(err));
-  });
-  
+// Middleware สำหรับการจัดการข้อผิดพลาด
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'ข้อผิดพลาดภายในเซิร์ฟเวอร์' });
+});
 
-// เริ่มต้น server
+// เริ่มต้นเซิร์ฟเวอร์
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`เซิร์ฟเวอร์กำลังทำงานที่ http://localhost:${PORT}`);
 });

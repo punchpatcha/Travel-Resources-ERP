@@ -1,4 +1,6 @@
 const Resource = require("../model/Resource");
+const fs = require('fs');
+const path = require('path');
 
 // Get all resources or filter by query
 exports.getResources = async (req, res) => {
@@ -14,6 +16,23 @@ exports.getResources = async (req, res) => {
 // Create a new resource
 exports.createResource = async (req, res) => {
   try {
+    if (req.body.image && req.body.image.startsWith('data:image/')) {
+      // แยก base64 data และนามสกุลไฟล์
+      const base64Data = req.body.image.split(',')[1];
+      const fileExtension = req.body.image.split(';')[0].split('/')[1];
+      const fileName = `${Date.now()}.${fileExtension}`;
+      req.body.image = fileName; // เก็บเฉพาะชื่อไฟล์แทน path
+
+      const uploadPath = path.join(__dirname, 'uploads');
+      if (!fs.existsSync(uploadPath)) {
+        fs.mkdirSync(uploadPath, { recursive: true });
+      }
+
+      // เขียนไฟล์ลงในโฟลเดอร์ uploads
+      const buffer = Buffer.from(base64Data, 'base64');
+      fs.writeFileSync(path.join(uploadPath, fileName), buffer);
+    }
+
     const resource = new Resource(req.body);
     await resource.save();
     res.status(201).json(resource);

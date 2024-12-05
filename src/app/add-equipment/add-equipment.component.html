@@ -1,111 +1,160 @@
 <div class="container">
-    <!-- Header -->
-    <div class="header">
-      <div class="back-button" (click)="goBack()">
-        <i class="fa-solid fa-arrow-left"></i> 
-      </div>
-      <h2 class="title">New Item</h2>
-      <div class="actions">
-        <button class="btn save">Save</button>
-        <button class="btn delete">Delete</button>
-      </div>
+  <!-- Header -->
+  <div class="header">
+    <div class="back-button" (click)="goBack()">
+      <i class="fa-solid fa-arrow-left"></i>
     </div>
-    <hr />
-  
-    <!-- Content Section -->
-    <div class="content">
-      <form (ngSubmit)="onSubmit()" class="form-section">
-        <div class="form-group">
-          <label for="name">Name<span class="required">*</span></label>
-          <input type="text" id="name" [(ngModel)]="equipment.name" name="name" required />
-        </div>
-        <div class="form-group">
-          <label for="category">Category<span class="required">*</span></label>
-          <select id="category" [(ngModel)]="equipment.category" name="category" required (change)="onCategoryChange()">
-            <option value="">Select a category</option>
-            <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
-            <option value="add-new">Add New Category</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="totalUnit">Total Unit<span class="required">*</span></label>
-          <div class="input-counter">
-            <button type="button" (click)="decrementUnit()">-</button>
-            <input type="number" id="totalUnit" [(ngModel)]="equipment.totalUnit" name="totalUnit" min="1" required />
-            <button type="button" (click)="incrementUnit()">+</button>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="status">Status<span class="required">*</span></label>
-          <select id="status" [(ngModel)]="equipment.status" name="status" required (ngModelChange)="onStatusChange($event)">
-            <option value="Available">Available</option>
-            <option value="Maintenance">Maintenance</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="maintenanceDate">Maintenance Date</label>
-          <input type="date" id="maintenanceDate" [(ngModel)]="equipment.maintenanceDate" name="maintenanceDate" />
-        </div>
-      </form>
-      <div class="right-column">
-        <div class="image-section">
-          <div class="image-placeholder" (click)="onBrowseImage()">
-            <!-- ถ้ามีการเลือกภาพแล้ว ให้แสดงภาพที่เลือก -->
-            <img *ngIf="previewImage" [src]="previewImage" alt="Selected Image" />
-            <!-- ถ้ายังไม่มีการเลือกภาพ แสดงข้อความและไอคอน -->
-            <div *ngIf="!previewImage" class="browse-container">
-              <span class="browse-text">Browse image</span>
-              <img class="upload-icon" src="upload-icon.png" alt="Upload Icon" />
-            </div>
-          </div>
-          <!-- ปุ่มเลือกไฟล์ที่ซ่อนอยู่ -->
+    <h2 class="title">New Item</h2>
+    <div class="actions">
+      <button class="btn save" (click)="saveEquipment()">Save</button>
+    </div>
+  </div>
+  <hr />
+
+  <!-- Content Section -->
+  <div class="content">
+    <form class="form-section">
+      <div class="form-group">
+        <label for="name">Name<span class="required">*</span></label>
+        <input
+          type="text"
+          id="name"
+          [(ngModel)]="equipment.name"
+          name="name"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="category">Category<span class="required">*</span></label>
+        <select
+          id="category"
+          [(ngModel)]="equipment.category"
+          name="category"
+          required
+          (change)="onCategoryChange()"
+        >
+          <option *ngFor="let category of categories" [value]="category">
+            {{ category }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Modal for adding new category -->
+      <!-- Modal overlay -->
+      <div class="modal-overlay" *ngIf="showModal"></div>
+      <!-- Modal -->
+      <div *ngIf="showModal" class="modal">
+        <h3>Add New Category</h3>
+        <input
+          type="text"
+          [(ngModel)]="newCategory"
+          name="newCategory"
+          placeholder="Enter new category"
+        />
+
+        <button class="Addmodal" (click)="addNewCategory()">Save</button>
+        <button class="Cancelmodal" (click)="closeModal()">Cancel</button>
+      </div>
+
+      <div class="form-group">
+        <label for="totalUnit">Total Unit<span class="required">*</span></label>
+        <div class="input-counter">
+          <button type="button" (click)="decrementUnit()">-</button>
           <input
-            type="file"
-            id="imageUpload"
-            (change)="onImageSelected($event)"
-            accept="image/*"
-            hidden
+            type="number"
+            id="totalUnit"
+            [(ngModel)]="equipment.totalUnits"
+            name="totalUnits"
+            min="1"
+            required
           />
-            <!-- ถ้าผู้ใช้เลือกภาพแล้ว แสดงปุ่มถังขยะ -->
-    <div *ngIf="previewImage" class="trash-container" (click)="removeImage()">
-      <img class="trash-icon" src="upload-icon.png" alt="Delete Image" />
-    </div>
+
+          <button type="button" (click)="incrementUnit()">+</button>
         </div>
-  
-        <!-- Form Data Container จะถูกแสดงเมื่อกรอกครบ -->
-        <div class="form-data-container" *ngIf="isFormValid()">
-          <h3>{{ equipment.name }}</h3>
-          <ul>
-            <li>
-              <strong>Category</strong>
-              <span>{{ equipment.category }}</span>
-            </li>
-            <li>
-              <strong>totalUnit</strong>
-              <span>{{ equipment.totalUnit }}</span>
-            </li>
-            <li>
-              <strong>Status</strong>
-              <span [ngClass]="getStatusClass(equipment.status)">
-                {{ equipment.status }}
-              </span>
-            </li>
-            <li>
-              <strong>Maintenance Date</strong>
-              <span>{{ equipment.maintenanceDate }}</span>
-            </li>
-          </ul>
-  
-          <div *ngIf="previewImage">
-            <h4>Uploaded Image:</h4>
-            <img
-              [src]="previewImage"
-              alt="Uploaded Image"
-              style="max-width: 100%; height: auto; border-radius: 4px;"
-            />
+      </div>
+      <div class="form-group">
+        <label for="status">Status<span class="required">*</span></label>
+        <select
+          id="status"
+          [(ngModel)]="equipment.status"
+          name="status"
+          required
+          (ngModelChange)="onStatusChange($event)"
+        >
+          <option value="Available">Available</option>
+          <option value="Maintenance">Maintenance</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="maintenanceDate">Maintenance Date</label>
+        <input
+          type="date"
+          id="maintenanceDate"
+          [(ngModel)]="equipment.maintenanceDate"
+          name="maintenanceDate"
+        />
+      </div>
+    </form>
+
+    <div class="right-column">
+      <div class="image-section">
+        <div class="image-placeholder" (click)="onBrowseImage()">
+          <!-- ถ้ามีการเลือกภาพแล้ว ให้แสดงภาพที่เลือก -->
+          <img *ngIf="previewImage" [src]="previewImage" alt="Selected Image" />
+          <!-- ถ้ายังไม่มีการเลือกภาพ แสดงข้อความและไอคอน -->
+          <div *ngIf="!previewImage" class="browse-container">
+            <span class="browse-text">Browse image</span>
+            <img class="upload-icon" src="upload-icon.png" alt="Upload Icon" />
           </div>
         </div>
+        <!-- ปุ่มเลือกไฟล์ที่ซ่อนอยู่ -->
+        <input
+          type="file"
+          id="imageUpload"
+          (change)="onImageSelected($event)"
+          accept="image/*"
+          hidden
+        />
+        <!-- ถ้าผู้ใช้เลือกภาพแล้ว แสดงปุ่มถังขยะ -->
+        <div
+          *ngIf="previewImage"
+          class="trash-container"
+          (click)="removeImage()"
+        >
+          <img class="trash-icon" src="upload-icon.png" alt="Delete Image" />
+        </div>
+      </div>
+
+      <!-- ส่วนแสดงผลทางด้านขวา -->
+      <div class="form-data-container">
+        <h3 *ngIf="equipment.name">{{ equipment.name }}</h3>
+        <ul>
+          <li>
+            <strong>Category</strong>
+            <span>{{ equipment.category ? equipment.category : "-" }}</span>
+          </li>
+          <li>
+            <strong>Total Units</strong>
+            <span>{{
+              equipment.totalUnits !== undefined ? equipment.totalUnits : "-"
+            }}</span>
+          </li>
+          <li>
+            <strong>Status</strong>
+            <span [ngClass]="getStatusClass(equipment.status)">
+              {{ equipment.status || "-" }}
+            </span>
+          </li>
+          <li>
+            <strong>Maintenance Date</strong>
+            <span>{{
+              equipment.maintenanceDate
+                ? (equipment.maintenanceDate | date : "dd/MM/yyyy")
+                : "-"
+            }}</span>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
-  
+</div>

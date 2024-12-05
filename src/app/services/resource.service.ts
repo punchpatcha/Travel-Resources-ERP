@@ -10,15 +10,16 @@ export interface Resource {
   type: string;
   category: string;
   status: string;
-  placeNumber?: string;  // ถ้า placeNumber ยังมีอยู่
-  plateNumber?: string;  // เพิ่ม plateNumber ในที่นี้
+  plateNumber?: string;
   capacity?: number;
   availableUnits?: number;
   totalUnits?: number;
   role?: string;
   contact?: string;
-  maintenanceDate?: string;
-  image?: string | null;
+  lastUsed?:Date;
+  lastAssignment?:Date;
+  maintenanceDate?:string;
+  image?: string | null; // เพิ่ม `null` เพื่อรองรับ
 }
 
 @Injectable({
@@ -51,20 +52,9 @@ export class ResourceService {
     return this.http.put<Resource>(`${this.apiUrl}/${id}`, updates);
   }
   
-
   deleteResource(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
-  createVehicle(vehicle: Resource): Observable<Resource> {
-    return this.http.post<Resource>(`${this.apiUrl}/vehicles`, vehicle);
-  }
   
-  updateVehicle(id: string, updates: Partial<Resource>): Observable<Resource> {
-    return this.http.put<Resource>(`${this.apiUrl}/vehicles/${id}`, updates);
-  }
-  
-  deleteVehicle(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/vehicles/${id}`);
-  }
 }

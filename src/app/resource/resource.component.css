@@ -1,35 +1,218 @@
 .btn-new {
-    background-color: #0F80F6;
-    color: white;
-    border: none;
-    padding-left: 20px;
-    padding-right: 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    height: 35px;
-    align-self: center;
-    font-size: 16px;
-    margin-right: 20px;
-    z-index: 10; 
-  }
-  
+  background-color: #0f80f6;
+  color: white;
+  border: none;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  height: 35px;
+  align-self: center;
+  font-size: 13px;
+  margin-right: 20px;
+  z-index: 10;
+}
+
 /* table-container */
 .table-container {
-    background-color: white;
+  background-color: white;
+}
+
+/* table header */
+.table-container-header {
+  display: flex;
+  justify-content: space-between;
+
+}
+
+.table-container-header .dropdown {
+
+  margin: 30px 10px;
+  margin-bottom: 10px;
+  color: #5b5b5b;
+  font-size: 16px;
+  font-weight: 500;
+
+  background-color: #ffffff;
+  border-color: #ffffff;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+thead {
+  background-color: #f9f9f9;
+}
+
+th,
+td {
+  text-align: left;
+
+  border-bottom: 1px solid #ddd;
+  font-size: 13px;
+}
+
+th {
+  font-weight: 500;
+  padding-left: 20px;
+}
+
+td {
+  font-weight: 400;
+  color: #5b5b5b;
+  padding-left: 20px;
+}
+
+td .edit-btn img {
+  width: 20px;
+  cursor: pointer;
+}
+
+/* Status Tags */
+/* ปรับความกว้างของ status-container */
+.status-container {
+  display: flex;
+  flex-direction: column; /* จัดให้อยู่ในแนวตั้ง */
+  max-width: 120px; /* กำหนดความกว้างสูงสุด */
+  overflow-wrap: break-word; /* ตัดข้อความเมื่อยาวเกิน */
+  margin: 5px 0px;
+}
+
+/* ปรับความกว้างของ status แต่ละตัว */
+.status {
+  padding: 5px;
+  border-radius: 4px;
+  font-size: 13px;
+  text-align: center;
+  display: inline-block;
+  width: fit-content; /* กำหนดให้ status เต็มความกว้างของ container */
+  box-sizing: border-box; /* รวม padding ในความกว้าง */
+}
+
+/* เพิ่มการจัดการเมื่อ status มีความยาวเกิน */
+.status-container .status {
+  white-space: nowrap; /* ป้องกันการตัดคำ */
+  text-overflow: ellipsis; /* เพิ่ม ... เมื่อข้อความยาวเกิน */
+  overflow: hidden; /* ซ่อนข้อความส่วนเกิน */
+}
+
+
+.status.available {
+  color: #77bfa3;
+  background-color: rgb(223, 255, 243);
+}
+
+.status.booked {
+  color: #fa8621;
+  background-color: #ffebd7;
+}
+
+.status.canceled{
+  color: #ff0000;
+  background-color: #ffe6e6;
+}
+
+.status.unavailable{
+  color: #696969;
+  background-color: #ddd;
+}
+
+.edit-btn {
+  border: none;
+  background-color: transparent;
+  cursor: pointer; /* เปลี่ยนเคอร์เซอร์เมื่อเลื่อนมาบนปุ่ม */
+  color: #dddddd; /* สีของขอบ */
+  font-size: 32px; /* ขนาดไอคอน */
+}
+
+.edit-btn:hover {
+  color: #007bff; /* เปลี่ยนสีเมื่อ hover */
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  padding-right: 20px;
+}
+
+.pagination button {
+  border: 1px solid #cecece;
+  background-color: transparent;
+  color: #007bff;
+  padding: 5px 10px;
+  margin: 5px 5px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pagination span {
+  font-size: 14px;
+  color: #555;
+}
+
+/* For smaller screens (mobile view) */
+@media only screen and (max-width: 768px) {
+  .btn-new {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 13px;
+    margin: 20px;
   }
-  
-  /* table header */
+
+  /* ทำให้ตารางสามารถเลื่อนแนวนอนได้เมื่อมีเนื้อหามากเกิน */
+  .table-container {
+    overflow-x: auto; /* เพิ่ม scroll แนวนอน */
+    font-size: 10px; /* ลดขนาดฟอนต์ในตาราง */
+    flex: 1;
+  }
+
   .table-container-header {
-    display: flex;
-    justify-content: space-between;
-  
+    justify-content: flex-start;
+    align-content: center;
   }
-  
-  
+
+  .table-container h1 {
+    font-size: 15px; /* ปรับให้เล็กลง */
+    margin-bottom: 10px;
+    align-content: center;
+    margin: 0;
+  }
+  .status {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 10px;
+    text-align: center;
+  }
+  /* ปรับขนาดปุ่มใน pagination */
+  .pagination button {
+    padding: 2px 5px; /* ปรับให้ปุ่มเล็กลง */
+  }
+
+  .pagination {
+    right: inherit;
+  }
+
+  /* ปรับขนาดฟอนต์ในตาราง */
+  th,
+  td {
+    font-size: 10px; /* ลดขนาดฟอนต์ในตาราง */
+    padding-left: 20px; /* ลด padding ในตาราง */
+  }
+
   .table-container-header .dropdown {
     margin: 30px 0px;
     color: #5b5b5b;
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 500;
     padding-left: 20px;
     background-color: #ffffff;
@@ -38,139 +221,4 @@
     cursor: pointer;
     transition: border-color 0.3s ease, background-color 0.3s ease;
   }
-  
-  /* Table */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  thead {
-    background-color: #f9f9f9;
-  }
-  
-  th,
-  td {
-    text-align: left;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    font-size: 13px;
-  }
-  
-  th {
-    font-weight: 500;
-    padding-left: 20px;
-  }
-  
-  td {
-    font-weight: 400;
-    color: #5b5b5b;
-    padding-left: 20px;
-  }
-  
-  td .edit-btn img {
-    width: 20px;
-    cursor: pointer;
-  }
-  
-  /* Status Tags */
-  .status {
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 13px;
-    text-align: center;
-  }
-  
-  .status.returned {
-    color: #77bfa3;
-    background-color: rgb(223, 255, 243);
-  }
-  
-  .status.booked {
-    color: #fa8621;
-    background-color: #ffebd7;
-  }
-  
-  .status.pending {
-    color: #f49459;
-    background-color: #fff4e6;
-  }
-  
-  .status.in-use {
-    color: #0f80f6;
-    background-color: #e3f1ff;
-  }
-  
-  .status.canceled {
-    color: #ff0000;
-    background-color: #ffe6e6;
-  }
-
-  .edit-btn {
-    border: none;
-    background-color: transparent;
-    cursor: pointer; /* เปลี่ยนเคอร์เซอร์เมื่อเลื่อนมาบนปุ่ม */
-    color: #DDDDDD; /* สีของขอบ */
-    font-size: 32px; /* ขนาดไอคอน */
-  }
-  
-  .edit-btn:hover {
-    color: #007bff; /* เปลี่ยนสีเมื่อ hover */
-  }
-  
-  /* Pagination */
-  .pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-    padding-right: 20px;
-  }
-  
-  .pagination button {
-    border: 1px solid #cecece;
-    background-color: transparent;
-    color: #007bff;
-    padding: 5px 10px;
-    margin: 5px 5px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .pagination span {
-    font-size: 14px;
-    color: #555;
-  }
-  
-  /* For smaller screens (mobile view) */
-  @media only screen and (max-width: 768px) {
-    .table-container {
-      overflow-x: auto; /* Horizontal scroll for tables */
-      font-size: 10px;
-    }
-  
-    th, td {
-      font-size: 10px;
-      padding-left: 20px;
-    }
-  
-    .status {
-      font-size: 10px;
-      padding: 5px 10px;
-    }
-  
-    .pagination button {
-      padding: 2px 5px;
-    }
-  
-    .pagination {
-      font-size: 10px;
-    }
-  
-    .table-container-header h1 {
-      font-size: 15px;
-      margin-bottom: 10px;
-    }
-  }
-  
+}

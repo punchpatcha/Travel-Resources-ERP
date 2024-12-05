@@ -1,61 +1,73 @@
 <div class="table-container">
-    <div class="table-container-header">
-        <select [(ngModel)]="selectedView" class="dropdown">
-          <option value="vehicles">Vehicles</option>
-          <option value="equipment">Equipment</option>
-          <option value="staff">Staff</option>
-        </select>
-        <button class="btn-new" (click)="navigateToAddResource()">+ New</button>
-    </div>
-  
-    <table>
-      <thead>
-        <tr *ngIf="selectedView === 'vehicles'">
-          <th>Name</th>
-          <th>Category</th>
-          <th>Plate Number</th>
-          <th>Capacity</th>
-          <th>Status</th>
-          <th>Last Used</th>
-          <th>Actions</th>
-        </tr>
-        <tr *ngIf="selectedView === 'equipment'">
-          <th>Name</th>
-          <th>Category</th>
-          <th>Available Units</th>
-          <th>Total Units</th>
-          <th>Status</th>
-          <th>Last Used</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of filteredResources()">
-          <td>{{ item.name }}</td>
-          <td>{{ item.category }}</td>
-          <td *ngIf="selectedView === 'vehicles'">{{ item.plateNumber }}</td>
-          <td *ngIf="selectedView === 'vehicles'">{{ item.capacity }}</td>
-          <td *ngIf="selectedView === 'equipment'">{{ item.availableUnits }}</td>
-          <td *ngIf="selectedView === 'equipment'">{{ item.totalUnits }}</td>
-          <td>
-            <span class="status" [ngClass]="getStatusClass(item.status)">
-              {{ item.status }}
-            </span>
-          </td>
-          <td>{{ item.lastUsed }}</td>
-          <td>
-            <button class="edit-btn" >
-                <i class="fa-solid fa-square-pen"></i>
-              </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  
-    <div class="pagination">
-      <button>&lt;</button>
-      <span>1 - 2</span>
-      <button>&gt;</button>
-    </div>
+  <div class="table-container-header">
+    <select [(ngModel)]="selectedView" class="dropdown">
+      <option value="vehicles">Vehicles</option>
+      <option value="equipment">Equipment</option>
+      <option value="staff">Staff</option>
+    </select>
+    <button class="btn-new" (click)="navigateToAddResource()">+ New</button>
   </div>
-  
+
+  <table>
+    <thead>
+      <tr *ngIf="selectedView === 'vehicles'">
+        <th>Name</th>
+        <th>Category</th>
+        <th>Plate Number</th>
+        <th>Capacity</th>
+        <th>Status</th>
+        <th>Last Used</th>
+        <th>Actions</th>
+      </tr>
+      <tr *ngIf="selectedView === 'equipment'">
+        <th>Name</th>
+        <th>Category</th>
+        <th>Available Units</th>
+        <th>Total Units</th>
+        <th>Status</th>
+        <th>Last Used</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of filteredResources()">
+        <td>{{ item.name }}</td>
+        <td>{{ item.category }}</td>
+        <td *ngIf="selectedView === 'vehicles'">{{ item.plateNumber }}</td>
+        <td *ngIf="selectedView === 'vehicles'">{{ item.capacity }}</td>
+        <td *ngIf="selectedView === 'equipment'">{{ item.availableUnits }}</td>
+        <td *ngIf="selectedView === 'equipment'">{{ item.totalUnits }}</td>
+        <td>
+          <div class="status-container">
+            <!-- ตรวจสอบว่าเป็นประเภท Equipment ก่อนจะแสดงตัวเลข -->
+            <div *ngIf="selectedView === 'equipment'">
+              <div *ngFor="let status of getStatusList(item.status)" class="status" [ngClass]="getStatusClass(status)">
+                <!-- แสดงจำนวนก่อนแสดงสถานะ -->
+                {{ getStatusCount(item, status) }} {{ status }}
+              </div>
+            </div>
+            <!-- สำหรับประเภทอื่นๆ ให้แสดงสถานะโดยไม่มีตัวเลข -->
+            <div *ngIf="selectedView !== 'equipment'">
+              <div *ngFor="let status of getStatusList(item.status)" class="status" [ngClass]="getStatusClass(status)">
+                {{ status }}
+              </div>
+            </div>
+          </div>
+        </td>
+                
+                <td>{{ item.lastUsed }}</td>
+        <td>
+          <button class="edit-btn">
+            <i class="fa-solid fa-square-pen"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <button>&lt;</button>
+    <span>1 - 2</span>
+    <button>&gt;</button>
+  </div>
+</div>

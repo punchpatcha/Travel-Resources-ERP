@@ -280,4 +280,56 @@ color: #FF0043; /* สีแดง */
 .back-button:hover {
   color: #0056b3;
 }
+  /* For smaller screens (mobile view) */
+  @media only screen and (max-width: 768px) {
+    .btn-new-booking {
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 13px;
+      margin: 20px;
+    }
+    
+    /* ทำให้ตารางสามารถเลื่อนแนวนอนได้เมื่อมีเนื้อหามากเกิน */
+    .table-container{
+      overflow-x: auto; /* เพิ่ม scroll แนวนอน */
+      font-size: 10px; /* ลดขนาดฟอนต์ในตาราง */
+      flex: 1;
+    }
+  
+    .table-container-header{
+      justify-content: flex-start;
+      align-content: center;
+    
+    }
+  
+    .table-container h1 {
+      font-size: 15px; /* ปรับให้เล็กลง */
+      margin-bottom: 10px;
+      align-content: center;
+      margin: 0;
+    }
+    .status {
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 10px;
+      text-align: center;
+    }
+    /* ปรับขนาดปุ่มใน pagination */
+    .pagination button {
+      padding: 2px 5px; /* ปรับให้ปุ่มเล็กลง */
+    }
+  
+    .pagination  {
+      right: inherit;
+    }
+  
+    /* ปรับขนาดฟอนต์ในตาราง */
+    th,
+    td {
+      font-size: 10px; /* ลดขนาดฟอนต์ในตาราง */
+      padding-left: 20px; /* ลด padding ในตาราง */
+    }
+  
+  }
+  
   

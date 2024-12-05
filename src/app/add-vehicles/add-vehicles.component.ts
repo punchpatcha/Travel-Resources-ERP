@@ -19,14 +19,18 @@ export class AddVehiclesComponent implements OnInit {
     category: '',
     capacity: 1,
     status: 'Available',
-    maintenanceDate: 'null',
+    maintenanceDate: '',
     plateNumber: '',
     image: '',
   };
 
+  // ตัวแปรสำหรับเก็บรายชื่อหมวดหมู่ที่มีอยู่
   categories: string[] = [];
+  // ตัวแปรสำหรับเก็บหมวดหมู่ใหม่ที่กำลังเพิ่ม
   newCategory = '';
+  // ตัวแปรสำหรับแสดงหรือซ่อนโมดัล
   showModal = false;
+  // ตัวแปรสำหรับแสดงตัวอย่างภาพ
   previewImage: string | null = null;
 
   constructor(
@@ -40,12 +44,18 @@ export class AddVehiclesComponent implements OnInit {
 
   // Load vehicle categories
   loadCategories() {
-    this.resourceService.getAvailableResources({ type: 'Vehicle' }).subscribe(
+    this.resourceService.getAvailableResources({ type: 'Vehicles' }).subscribe(
       (data) => {
-        const uniqueCategories = Array.from(
-          new Set(data.map((item) => item.category))
-        );
+        // กรองข้อมูลที่ type เป็น 'Vehicles' เท่านั้น
+        const vehicleCategories = data.filter(item => item.type === 'Vehicles');
+  
+        // ดึงค่า category ที่ไม่ซ้ำกัน
+        const uniqueCategories = Array.from(new Set(vehicleCategories.map(item => item.category)));
+  
+        // กำหนดให้ categories เป็น uniqueCategories
         this.categories = uniqueCategories;
+  
+        // เพิ่มตัวเลือก "Add new category" ถ้ายังไม่มี
         if (!this.categories.includes('Add new category')) {
           this.categories.push('Add new category');
         }
@@ -72,6 +82,12 @@ export class AddVehiclesComponent implements OnInit {
       this.newCategory = '';
     }
   }
+
+     // ฟังก์ชันสำหรับตรวจสอบการเปลี่ยนแปลงสถานะของอุปกรณ์
+     onStatusChange(status: string) {
+      console.log('Status changed to:', status);
+      this.vehicle.status = status;
+    }
 
   closeModal() {
     this.showModal = false;
@@ -128,8 +144,33 @@ export class AddVehiclesComponent implements OnInit {
     this.vehicle.image = '';
   }
 
-  // Get status class for styling
+  isPlateNumberValid(plateNumber: string): boolean {
+    const regex = /^[A-Za-z]{2}-\d{4}$/; // Pattern: Two letters, a dash, and four digits
+    return regex.test(plateNumber);
+  }
+
+  isPlateNumberUnique(plateNumber: string): boolean {
+    let isUnique = true;
+    this.resourceService.getAvailableResources({ type: 'Vehicles' }).subscribe(
+      (data) => {
+        const existingPlateNumbers = data.map((item) => item.plateNumber);
+        if (existingPlateNumbers.includes(plateNumber)) {
+          isUnique = false;
+        }
+      },
+      (error) => {
+        console.error('Error checking plate numbers:', error);
+      }
+    );
+    return isUnique;
+  }
+
+  // ฟังก์ชันสำหรับกำหนดคลาส CSS ตามสถานะ แต้งสี
   getStatusClass(status?: string): string {
+
+    if (!status) {
+      return 'status-default'; // ค่าเริ่มต้นเมื่อไม่มีค่า `status`
+    }
     switch (status) {
       case 'Available':
         return 'status-available';
@@ -139,6 +180,7 @@ export class AddVehiclesComponent implements OnInit {
         return 'status-default';
     }
   }
+
 
   // Validate form fields
   isFormValid(): boolean {
@@ -154,6 +196,26 @@ export class AddVehiclesComponent implements OnInit {
   // Save vehicle
   saveVehicle() {
     if (this.isFormValid()) {
+      if (!this.isPlateNumberValid(this.vehicle.plateNumber || '')) {
+        alert('Invalid plate number. It must follow the format: AB-1234.');
+        return;
+      }
+  
+      if (!this.isPlateNumberUnique(this.vehicle.plateNumber || '')) {
+        alert('Plate number already exists. Please enter a unique plate number.');
+        return;
+      }
+  
+      // Ensure valid maintenanceDate and type
+      if (!this.vehicle.maintenanceDate) {
+        this.vehicle.maintenanceDate = new Date().toISOString(); // Use the current date if undefined
+      }
+      if (this.vehicle.type !== 'Vehicles') {
+        this.vehicle.type = 'Vehicles'; // Match backend enum value
+      }
+  
+      console.log('Vehicle data being sent:', this.vehicle); // Debug log
+  
       this.resourceService.createResource(this.vehicle as Resource).subscribe(
         (response) => {
           console.log('Vehicle added successfully:', response);
@@ -161,13 +223,15 @@ export class AddVehiclesComponent implements OnInit {
         },
         (error) => {
           console.error('Error adding vehicle:', error);
+          if (error.error) {
+            alert(`Backend error: ${error.error.error || 'Unknown error'}`);
+          }
         }
       );
     } else {
       alert('Please fill in all required fields.');
     }
   }
-
   // Navigate back
   goBack() {
     this.router.navigate(['/resource'], { queryParams: { type: 'vehicle' } });

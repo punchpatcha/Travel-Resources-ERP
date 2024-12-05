@@ -2,12 +2,12 @@
   <!-- Header -->
   <div class="header">
     <div class="back-button" (click)="goBack()">
-      <i class="fa-solid fa-arrow-left"></i> 
+      <i class="fa-solid fa-arrow-left"></i>
     </div>
     <h2 class="title">New Item</h2>
     <div class="actions">
-      <button class="btn save" (click)="onSubmit()" [disabled]="!vehicleForm.valid">Save</button>
-      <button class="btn delete" (click)="deleteVehicle()">Delete</button>
+      <button class="btn save" (click)="saveVehicle()">Save</button>
+      
     </div>
   </div>
   <hr />
@@ -15,7 +15,7 @@
   <!-- Content Section -->
   <div class="content">
     <!-- Left Column: Form Section -->
-    <form (ngSubmit)="onSubmit()" #vehicleForm="ngForm" class="form-section">
+    <form class="form-section">
       <div class="form-group">
         <label for="name">Name<span class="required">*</span></label>
         <input type="text" id="name" [(ngModel)]="vehicle.name" name="name" required />
@@ -23,32 +23,34 @@
       <div class="form-group">
         <label for="category">Category<span class="required">*</span></label>
         <select
+        id="category"
+        name="category"
+        required
           [(ngModel)]="vehicle.category"
-          (click)="loadCategories()"
-          (focus)="loadCategories()"
-          (change)="onCategoryChange($event)"
+          (change)="onCategoryChange()"
         >
-          <option value="">Select a category</option>
           <option *ngFor="let category of categories" [value]="category">
             {{ category }}
           </option>
-          <option value="add-new">Add New Category</option>
         </select>
       </div>
-<!-- Modal for adding new category -->
-<div *ngIf="showModal" class="modal-overlay">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>Add New Category</h3>
-      <button type="button" class="close-button" (click)="closeModal()">X</button>
-    </div>
-    <div class="modal-body">
-      <input type="text" id="newCategory" [(ngModel)]="newCategory" placeholder="Enter category name" />
-      <button type="button" (click)="addNewCategory()">Add Category</button>
-    </div>
-  </div>
-</div>
 
+      <div class="modal-overlay" *ngIf="showModal"></div>
+      <!-- Modal -->
+      <div *ngIf="showModal" class="modal">
+        <h3>Add New Category</h3>
+        <input
+          type="text"
+          [(ngModel)]="newCategory"
+          name="newCategory"
+          placeholder="Enter new category"
+        />
+
+        <button class="Addmodal" (click)="addNewCategory()">Save</button>
+        <button class="Cancelmodal" (click)="closeModal()">Cancel</button>
+      </div>
+
+      <!-- Retain the plateNumber and capacity sections as is -->
       <div class="form-group">
         <label for="plateNumber">Plate Number<span class="required">*</span></label>
         <input type="text" id="plateNumber" [(ngModel)]="vehicle.plateNumber" name="plateNumber" required />
@@ -97,7 +99,7 @@
         </div>
       </div>
 
-      <!-- Form Data Container จะถูกแสดงเมื่อกรอกครบ -->
+      <!-- Form Data Container will show when form is valid -->
       <div class="form-data-container" *ngIf="isFormValid()">
         <h3>{{ vehicle.name }}</h3>
         <ul>

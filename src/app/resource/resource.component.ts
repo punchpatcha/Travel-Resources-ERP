@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component,OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ResourceService, Resource } from '../services/resource.service';
 
 @Component({
   imports: [CommonModule, FormsModule],
@@ -9,50 +10,30 @@ import { Router } from '@angular/router';
   templateUrl: './resource.component.html',
   styleUrls: ['./resource.component.css'],
 })
-export class ResourceComponent {
-  constructor(private router: Router) {}
-  // ตัวแปรสำหรับผูกข้อมูลกับ UI
+export class ResourceComponent implements OnInit {
   searchTerm: string = ''; // สำหรับช่องค้นหา
   selectedView: string = 'vehicles'; // มุมมองที่เลือก (vehicles/equipment)
+  resources: Resource[] = []; // ตัวแปรสำหรับเก็บข้อมูลจาก MongoDB
 
-  // รายการข้อมูล (Mock Data)
-  resources = [
-    // Vehicle Data
-    {
-      name: 'Van',
-      category: 'Passenger',
-      plateNumber: 'ABC-1234',
-      capacity: 15,
-      status: 'Under Maintenance',
-      lastUsed: '2023-11-20',
-    },
-    {
-      name: 'Truck',
-      category: 'Cargo',
-      plateNumber: 'DEF-5678',
-      capacity: 10,
-      status: ' Under Maintenance',
-      lastUsed: '2023-11-22',
-    },
+  constructor(private router: Router, private resourceService: ResourceService) {}
 
-    // Equipment Data
-    {
-      name: 'Forklift',
-      category: 'Heavy Equipment',
-      availableUnits: 3,
-      totalUnits: 5,
-      status: 'Available, Booked',
-      lastUsed: '2023-11-19',
-    },
-    {
-      name: 'Drill',
-      category: 'Tool',
-      availableUnits: 10,
-      totalUnits: 20,
-      status: 'Under Maintenance,Available',
-      lastUsed: '2023-11-18',
-    },
-  ];
+  ngOnInit(): void {
+    // เรียกใช้เมธอดเพื่อดึงข้อมูลจาก API เมื่อ component ถูกโหลด
+    this.loadResources();
+  }
+
+  // โหลดข้อมูลจาก API
+  loadResources(): void {
+    this.resourceService.getAllResources().subscribe(
+      (data: Resource[]) => {
+        this.resources = data;
+      },
+      (error) => {
+        console.error('Error loading resources:', error);
+      }
+    );
+  }
+
 
   // กรองรายการตามประเภทที่เลือก (vehicles หรือ equipment)
   filteredResources() {
@@ -62,8 +43,10 @@ export class ResourceComponent {
           return 'plateNumber' in item; // ตรวจสอบว่าเป็น vehicle หรือไม่
         } else if (this.selectedView === 'equipment') {
           return 'totalUnits' in item; // ตรวจสอบว่าเป็น equipment หรือไม่
+        } else{
+          return 'role' in item; 
         }
-        return false;
+  
       })
       .filter(
         (item) =>
@@ -78,11 +61,6 @@ export class ResourceComponent {
     return status.split(',').map((s) => s.trim());
   }
 
-  getStatusCount(item: any, status: string): number {
-    const statusList = this.getStatusList(item.status);
-    return statusList.filter((s) => s.toLowerCase() === status.toLowerCase())
-      .length;
-  }
 
   // ใช้กำหนดคลาสสำหรับสถานะ
   getStatusClass(status: string) {
@@ -101,11 +79,11 @@ export class ResourceComponent {
   }
   navigateToAddResource() {
     if (this.selectedView === 'vehicles') {
-      this.router.navigate(['/vehicles/add']);
+      this.router.navigate(['resource/vehicles/add']);
     } else if (this.selectedView === 'equipment') {
-      this.router.navigate(['/equipment/add']);
+      this.router.navigate(['resource/equipment/add']);
     } else if (this.selectedView == 'staff') {
-      this.router.navigate(['/equipment/add']);
+      this.router.navigate(['resource/staff/add']);
     }
   }
 }

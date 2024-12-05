@@ -10,12 +10,14 @@ export interface Resource {
   type: string;
   category: string;
   status: string;
-  placeNumber?: string;
+  plateNumber?: string;
   capacity?: number;
   availableUnits?: number;
   totalUnits?: number;
   role?: string;
   contact?: string;
+  lastUsed?:Date;
+  lastAssignment?:Date;
 }
 
 @Injectable({

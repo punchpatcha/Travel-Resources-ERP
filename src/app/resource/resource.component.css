@@ -22,11 +22,9 @@
 .table-container-header {
   display: flex;
   justify-content: space-between;
-
 }
 
 .table-container-header .dropdown {
-
   margin: 30px 10px;
   margin-bottom: 10px;
   color: #5b5b5b;
@@ -103,7 +101,6 @@ td .edit-btn img {
   overflow: hidden; /* ซ่อนข้อความส่วนเกิน */
 }
 
-
 .status.available {
   color: #77bfa3;
   background-color: rgb(223, 255, 243);
@@ -114,12 +111,12 @@ td .edit-btn img {
   background-color: #ffebd7;
 }
 
-.status.canceled{
+.status.canceled {
   color: #ff0000;
   background-color: #ffe6e6;
 }
 
-.status.unavailable{
+.status.unavailable {
   color: #696969;
   background-color: #ddd;
 }
@@ -209,8 +206,13 @@ td .edit-btn img {
     padding-left: 20px; /* ลด padding ในตาราง */
   }
 
+  /* ปรับขนาดของ options */
+  .dropdown option {
+    font-size: 10px; /* ปรับขนาดฟอนต์ใน option */
+  }
+
   .table-container-header .dropdown {
-    margin: 30px 0px;
+    margin: 20px 0px;
     color: #5b5b5b;
     font-size: 13px;
     font-weight: 500;

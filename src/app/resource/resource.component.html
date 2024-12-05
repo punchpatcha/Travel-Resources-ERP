@@ -28,6 +28,15 @@
         <th>Last Used</th>
         <th>Actions</th>
       </tr>
+      <!-- staff header-->
+      <tr *ngIf="selectedView === 'staff'">
+        <th>Name</th>
+        <th>Role</th>
+        <th>Contact</th>
+        <th>Status</th>
+        <th>Last Assignment</th>
+        <th>Actions</th>
+      </tr>
     </thead>
     <tbody>
       <tr *ngFor="let item of filteredResources()">
@@ -37,25 +46,30 @@
         <td *ngIf="selectedView === 'vehicles'">{{ item.capacity }}</td>
         <td *ngIf="selectedView === 'equipment'">{{ item.availableUnits }}</td>
         <td *ngIf="selectedView === 'equipment'">{{ item.totalUnits }}</td>
+        <!-- staff header-->
+        <td *ngIf="selectedView === 'staff'">{{ item.role }}</td>
+
         <td>
           <div class="status-container">
-            <!-- ตรวจสอบว่าเป็นประเภท Equipment ก่อนจะแสดงตัวเลข -->
-            <div *ngIf="selectedView === 'equipment'">
-              <div *ngFor="let status of getStatusList(item.status)" class="status" [ngClass]="getStatusClass(status)">
-                <!-- แสดงจำนวนก่อนแสดงสถานะ -->
-                {{ getStatusCount(item, status) }} {{ status }}
-              </div>
-            </div>
+     
             <!-- สำหรับประเภทอื่นๆ ให้แสดงสถานะโดยไม่มีตัวเลข -->
-            <div *ngIf="selectedView !== 'equipment'">
-              <div *ngFor="let status of getStatusList(item.status)" class="status" [ngClass]="getStatusClass(status)">
+            <div *ngIf="selectedView ">
+              <div
+                *ngFor="let status of getStatusList(item.status)"
+                class="status"
+                [ngClass]="getStatusClass(status)"
+              >
                 {{ status }}
               </div>
             </div>
           </div>
         </td>
-                
-                <td>{{ item.lastUsed }}</td>
+
+        <td>
+          {{ item.lastUsed | date : "dd/MM/yyyy" }}
+          {{ item.lastAssignment | date : "dd/MM/yyyy" }}
+        </td>
+
         <td>
           <button class="edit-btn">
             <i class="fa-solid fa-square-pen"></i>

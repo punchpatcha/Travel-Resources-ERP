@@ -13,7 +13,7 @@ export const appRoutes: Routes = [
   { path: 'booking', component: BookingComponent },
   { path: 'booking/add', component: AddBookingComponent },
   {path: 'booking/edit/:id', component: BookingEditComponent },
-  { path: 'vehicles/add', component: AddVehiclesComponent },
-  { path: 'equipment/add', component: AddEquipmentComponent },
-  {path: 'staff/add', component: AddStaffComponent},
+  { path: 'resource/vehicles/add', component: AddVehiclesComponent },
+  { path: 'resource/equipment/add', component: AddEquipmentComponent },
+  {path: 'resource/staff/add', component: AddStaffComponent},
 ];

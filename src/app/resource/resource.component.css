@@ -8,7 +8,7 @@
     cursor: pointer;
     height: 35px;
     align-self: center;
-    font-size: 16px;
+    font-size: 14px;
     margin-right: 20px;
     z-index: 10; 
   }
@@ -43,7 +43,6 @@
   table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
   }
   
   thead {

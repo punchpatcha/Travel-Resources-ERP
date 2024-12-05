@@ -90,6 +90,7 @@
     flex: 1;
     flex-direction: column; /* ให้ image-section อยู่บนและ form-data อยู่ล่าง */
     gap: 20px; /* ระยะห่างระหว่าง image-section กับ form-data */
+    align-items: center;
   }
   
   .image-section {
@@ -100,6 +101,8 @@
     background-color: #f4f4f4;
     border: 1px solid #ddd;
     border-radius: 8px;
+    min-width: 150px;
+    width: 65%;
     min-height: 150px; /* กำหนดความสูงขั้นต่ำ */
     height: 40%; /* กำหนดความสูง 50% ของ container */
     text-align: center;
@@ -244,21 +247,71 @@
 }
 
 /* Modal Header */
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Modal Box */
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Modal Header */
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 10px;
 }
 
-.modal-body {
-  margin-top: 15px;
+.modal-header h3 {
+  margin: 0;
 }
 
-button.close-button {
-  border: none;
-  background: none;
+.close-button {
   font-size: 20px;
   cursor: pointer;
+}
+
+/* Modal Body */
+.modal-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-body input {
+  margin-bottom: 10px;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.modal-body button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal-body button:hover {
+  background-color: #0056b3;
 }
 
 button {

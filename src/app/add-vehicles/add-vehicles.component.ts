@@ -1,185 +1,159 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { ResourceService } from '../services/resource.service';
+import { HttpClient } from '@angular/common/http';
+
 
 @Component({
   imports: [CommonModule, FormsModule],
   selector: 'app-add-vehicles',
   templateUrl: './add-vehicles.component.html',
-  styleUrls: ['./add-vehicles.component.css']
+  styleUrls: ['./add-vehicles.component.css'],
 })
 export class AddVehiclesComponent {
-
-   // รายการพาหนะที่มีอยู่
-   item = [
-    { id: 1, name: 'Toyota Camry', category: 'Sedan', plateNumber: 'AB-1234', capacity: 5, status: 'Available', maintenanceDate: '2024-12-01' },
-    { id: 2, name: 'Honda Accord', category: 'SUV', plateNumber: 'CD-5678', capacity: 7, status: 'Under Maintenance', maintenanceDate: '2024-11-30' }
-  ];
-
-  // อ็อบเจ็กต์สำหรับพาหนะใหม่
   vehicles = {
-    id: 0,
     name: '',
     category: '',
     plateNumber: '',
     capacity: 0,
     status: '',
-    maintenanceDate: null as string | null
+    maintenanceDate: 'null',
+    type: 'vehicle',  // ประเภทนี้เป็น vehicle
+    image: null,
   };
-
-  // Regular Expression สำหรับตรวจสอบรูปแบบเลขทะเบียน
-  plateNumberPattern = /^[A-Z]{2}-\d{4}$/;
-
-  // ตัวแปรสำหรับจัดการหมวดหมู่
-  categories = ['Sedan', 'SUV', 'Truck', 'Van']; // หมวดหมู่เริ่มต้น
-  newCategory: string = ''; // ตัวแปรเก็บหมวดหมู่ใหม่
-  showModal: boolean = false; // ใช้เพื่อแสดง/ซ่อน Modal
-
-  // แสดงภาพที่เลือก
-  previewImage: string | null = null;
-
-  constructor(private router: Router, 
-    private location: Location){}
-
-
-  // ตรวจสอบเลขทะเบียนรถยนต์ว่าถูกต้องหรือไม่ และไม่ซ้ำ
-  isPlateNumberValid(plateNumber: string): boolean {
-    // ตรวจสอบรูปแบบเลขทะเบียน
-    if (!this.plateNumberPattern.test(plateNumber)) {
-      return false; // คืนค่า false หากรูปแบบไม่ถูกต้อง
-    }
   
-    // ตรวจสอบความซ้ำของเลขทะเบียน
-    const isDuplicate = this.item.some((item) => item.plateNumber === plateNumber);
-    return !isDuplicate; // คืน true ถ้าไม่มีเลขทะเบียนซ้ำ
-  }
+  categories: string[] = [];
+  newCategory: string = '';
+  showModal: boolean = false;
+  previewImage: string = '';
+  apiUrl: string = 'http://localhost:3000/api/resources';
 
-  // เพิ่มหมวดหมู่ใหม่
-  addNewCategory() {
-    if (this.newCategory.trim()) {
-      this.categories.push(this.newCategory); // เพิ่มหมวดหมู่ใหม่
-      this.vehicles.category = this.newCategory; // ตั้งค่าหมวดหมู่ที่เลือก
-      this.closeModal(); // ปิด Modal
-    }
-  }
+  constructor(private resourceService: ResourceService,
+    private http: HttpClient,
+  ) {}
 
-  // ปิด Modal
-  closeModal() {
-    this.showModal = false;
-    this.newCategory = ''; // รีเซ็ตค่า input
-  }
-
-  // แสดง Modal เมื่อเลือก "Add New"
-  onCategoryChange() {
-    if (this.vehicles.category === 'add-new') {
-      this.showModal = true;
-    }
-  }
-
-  // เพิ่มข้อมูลรถยนต์ใหม่
-  addVehicle() {
-    const { name, plateNumber, capacity, category, maintenanceDate } = this.vehicles;
+  loadCategories() {
+    this.http.get<any[]>(this.apiUrl).subscribe(
+      (data) => {
+        // กรองเฉพาะรายการที่มี type เป็น 'Vehicles'
+        const vehicleCategories = data.filter((item) => item.type === 'Vehicles');
   
-    if (!name.trim() || !plateNumber.trim() || capacity <= 0 || !category) {
-      console.error('Please complete all required fields.');
-      return;
-    }
+        // ดึงข้อมูล category และกรองค่าที่ซ้ำ
+        const uniqueCategories = Array.from(
+          new Set(vehicleCategories.map((item) => item.category))
+        );
   
-    if (this.isPlateNumberValid(plateNumber)) {
-      // เพิ่มข้อมูลรถยนต์ใหม่และตรวจสอบ maintenanceDate
-      this.item.push({
-        ...this.vehicles,
-        maintenanceDate: this.vehicles.maintenanceDate || "", // ถ้า maintenanceDate เป็น null จะใช้ "" แทน
-        id: this.item.length + 1
-      });
-      console.log('Vehicle added successfully:', this.vehicles);
-      this.resetForm();
-    } else {
-      console.error('Invalid or duplicate plate number.');
-    }
-  }
-
-  // รีเซ็ตฟอร์ม
-  resetForm() {
-    this.vehicles = {
-      id: 0,
-      name: '',
-      category: '',
-      plateNumber: '',
-      capacity: 0,
-      status: 'Available',
-      maintenanceDate: null
-    };
-    this.previewImage = null;
-  }
-
-  // ตรวจสอบว่าแบบฟอร์มถูกกรอกครบหรือไม่
-  isFormValid(): boolean {
-    const { name, plateNumber, capacity, category, status } = this.vehicles;
-    console.log('Checking form validity: ', { name, plateNumber, capacity, category, status });
-  
-    return (
-      name.trim() !== '' &&
-      plateNumber.trim() !== '' &&
-      capacity > 0 &&
-      category.trim() !== '' &&
-      status.trim() !== '' 
+        // อัปเดตรายการ categories โดยลบค่า null/undefined
+        this.categories = uniqueCategories.filter((category) => !!category);
+      },
+      (error) => {
+        console.error('Error loading categories:', error);
+        alert('ไม่สามารถโหลดหมวดหมู่ได้');
+      }
     );
   }
-  
-  
-  // จัดการเลือกไฟล์ภาพ
-  onImageSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      const reader = new FileReader();
 
+  openModal() {
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.newCategory = ''; // รีเซ็ตหมวดหมู่ใหม่
+  }
+
+  addNewCategory() {
+    if (this.newCategory.trim()) {
+      // เพิ่มหมวดหมู่ใหม่เข้าไปในรายการ categories
+      this.categories.push(this.newCategory.trim());
+      // ตั้งค่า category ของ vehicles เป็นหมวดหมู่ใหม่
+      this.vehicles.category = this.newCategory.trim();
+      // ปิด modal
+      this.closeModal();
+    } else {
+      alert('กรุณากรอกชื่อหมวดหมู่');
+    }
+  }
+
+  onCategoryChange(event: Event) {
+    const selectedCategory = (event.target as HTMLSelectElement).value;
+    if (selectedCategory === 'add-new') {
+      this.showModal = true; // แสดง Modal
+    } else {
+      this.vehicles.category = selectedCategory; // กำหนดค่า category
+    }
+  }
+
+  onSubmit() {
+    // Ensure capacity is a valid number (if it's not, set it to 0)
+    const validCapacity = isNaN(this.vehicles.capacity) ? 0 : this.vehicles.capacity;
+  
+    this.resourceService.createVehicle({
+      name: this.vehicles.name,
+      category: this.vehicles.category,
+      plateNumber: this.vehicles.plateNumber,
+      capacity: validCapacity,  // Ensure capacity is a valid number
+      status: this.vehicles.status,
+      maintenanceDate: this.vehicles.maintenanceDate,
+      type: 'vehicle',  // Assuming this is a vehicle, set type accordingly
+      image: this.previewImage ? this.previewImage : null,  // Handle image if present
+      _id: ''  // Passing a dummy value for _id
+    }).subscribe(response => {
+      console.log('Vehicle created:', response);
+    });
+  }
+
+  // ฟังก์ชันสำหรับการเลือกภาพ
+  onBrowseImage() {
+    document.getElementById('imageUpload')?.click();
+  }
+
+  onImageSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
       reader.onload = () => {
         this.previewImage = reader.result as string;
       };
-
-      reader.readAsDataURL(file);
     }
   }
 
-  // เปิดตัวเลือกไฟล์ภาพ
-  onBrowseImage(): void {
-    const fileInput = document.getElementById('imageUpload') as HTMLInputElement;
-    fileInput?.click();
+  removeImage() {
+    this.previewImage = '';
   }
 
-    // ฟังก์ชันลบภาพที่เลือก
-    removeImage(): void {
-      this.previewImage = null; // รีเซ็ตค่าของ previewImage
-    }
-
-  // ฟังก์ชัน Submit
-  onSubmit() {
-    this.isFormValid(),
-    console.log('Vehicles List:', this.item);
-  }
-
-  // ฟังก์ชัน Cancel เพื่อกลับไปยังหน้า Resources
-  cancel() {
-    this.router.navigate(['/resources']);
-  }
-
-  // เปลี่ยนสีสถานะตามค่าที่เลือก
   getStatusClass(status: string): string {
+    // Example: Add classes based on the status value
     switch (status) {
       case 'Available':
-        return 'status-available';
-      case 'Maintenance':
-        return 'status-maintenance';
+        return 'status-available';  // Define the class 'status-active' in CSS
+      case 'Booked':
+        return 'status-inactive';  // Define the class 'status-inactive' in CSS
+      case 'Mainenace':
+        return 'status-maintenance';  // Define the class 'status-maintenance' in CSS
       default:
-        return 'Available';
+        return 'status-default';  // Default class for undefined status
     }
   }
 
-  goBack(): void {
-    this.location.back(); // นำทางกลับไปยังหน้าก่อนหน้า
+  isFormValid(): boolean {
+    console.log(this.vehicles);
+    return (
+      this.vehicles.name !== '' &&
+      this.vehicles.category !== '' &&
+      this.vehicles.plateNumber !== '' &&
+      this.vehicles.capacity > 0 &&
+      this.vehicles.status !== ''
+    );
+  }
+
+  deleteVehicle(){
+
+  }
+
+  goBack(){
+
   }
 }

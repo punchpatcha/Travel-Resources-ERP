@@ -1,98 +1,76 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ResourceService, Resource } from '../services/resource.service';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
-  imports:[CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   selector: 'app-resource',
   templateUrl: './resource.component.html',
   styleUrls: ['./resource.component.css']
 })
-export class ResourceComponent {
-  constructor(private router: Router) {}
-  // ตัวแปรสำหรับผูกข้อมูลกับ UI
-  searchTerm: string = ''; // สำหรับช่องค้นหา
-  selectedView: string = 'vehicles'; // มุมมองที่เลือก (vehicles/equipment)
+export class ResourceComponent implements OnInit {
+  searchTerm: string = ''; // คำค้นหา
+  selectedView: string = 'vehicles'; // ประเภทเริ่มต้น
+  resources: Resource[] = []; // รายการข้อมูลทั้งหมด
+  filteredResources: Resource[] = []; // รายการข้อมูลที่ถูกกรอง
 
-  // รายการข้อมูล (Mock Data)
-  resources = [
-    // Vehicle Data
-    {
-      name: 'Van',
-      category: 'Passenger',
-      plateNumber: 'ABC-1234',
-      capacity: 15,
-      status: 'Available',
-      lastUsed: '2023-11-20'
-    },
-    {
-      name: 'Truck',
-      category: 'Cargo',
-      plateNumber: 'DEF-5678',
-      capacity: 10,
-      status: 'In Use',
-      lastUsed: '2023-11-22'
-    },
+  constructor(private resourceService: ResourceService, private router: Router) {}
 
-    // Equipment Data
-    {
-      name: 'Forklift',
-      category: 'Heavy Equipment',
-      availableUnits: 3,
-      totalUnits: 5,
-      status: 'Available',
-      lastUsed: '2023-11-19'
-    },
-    {
-      name: 'Drill',
-      category: 'Tool',
-      availableUnits: 10,
-      totalUnits: 20,
-      status: 'Under Maintenance',
-      lastUsed: '2023-11-18'
-    }
-  ];
+  ngOnInit(): void {
+    this.loadResources(); // เรียกข้อมูลเมื่อ component ถูกสร้าง
+  }
 
-  // กรองรายการตามประเภทที่เลือก (vehicles หรือ equipment)
-  filteredResources() {
-    return this.resources.filter(item => {
-      if (this.selectedView === 'vehicles') {
-        return 'plateNumber' in item; // ตรวจสอบว่าเป็น vehicle หรือไม่
-      } else if (this.selectedView === 'equipment') {
-        return 'totalUnits' in item; // ตรวจสอบว่าเป็น equipment หรือไม่
-      }
-      return false;
-    }).filter(item => 
-      // เพิ่มการกรองข้อมูลด้วย searchTerm
-      item.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      item.category.toLowerCase().includes(this.searchTerm.toLowerCase())
+  // ฟังก์ชันโหลดข้อมูลจาก Service
+  loadResources(): void {
+    this.resourceService.getAllResources().subscribe(
+      (data) => {
+        this.resources = data; // เก็บข้อมูลทั้งหมด
+        this.applyFilters(); // เรียกฟังก์ชันเพื่อกรองข้อมูล
+      },
+      (error) => console.error('Error loading resources:', error)
     );
   }
 
-  // ใช้กำหนดคลาสสำหรับสถานะ
-  getStatusClass(status: string) {
+  // ฟังก์ชันกรองข้อมูล
+  applyFilters(): void {
+    this.filteredResources = this.resources
+      .filter((item) => {
+        // กรองตามประเภทที่เลือก
+        if (this.selectedView === 'vehicles') return item.type === 'Vehicles';
+        if (this.selectedView === 'equipment') return item.type === 'Equipment';
+        if (this.selectedView === 'staff') return item.type === 'Staff';
+        return false;
+      })
+  }
+
+  // เปลี่ยนประเภทข้อมูล (View)
+  changeView(view: string): void {
+    this.selectedView = view; // ตั้งค่าประเภทที่เลือก
+    this.applyFilters(); // กรองข้อมูลใหม่
+  }
+
+  // นำทางไปยังหน้าเพิ่ม Resource
+  navigateToAddResource(): void {
+    this.router.navigate([`/${this.selectedView}/add`]); // ตัวอย่าง URL: /vehicles/add
+  }
+
+  // แสดงคลาสสำหรับสถานะ
+  getStatusClass(status: string): string {
     switch (status.toLowerCase()) {
-      case 'available':
-        return 'status available';
-      case 'in use':
-        return 'status booked';
-      case 'under maintenance':
-        return 'status pending';
-      case 'out of service':
-        return 'status canceled';
-      default:
-        return '';
+      case 'available': return 'status available';
+      case 'booked': return 'status booked';
+      case 'in use': return 'status in-use';
+      case 'maintenance': return 'status maintenance';
+      case 'unavailable': return 'status unavailable';
+      default: return '';
     }
   }
-  navigateToAddResource() {
-    if (this.selectedView === 'vehicles') {
-      this.router.navigate(['/vehicles/add']);
-    } else if (this.selectedView === 'equipment') {
-      this.router.navigate(['/equipment/add']); 
-    } else if(this.selectedView == 'staff'){
-      this.router.navigate(['/equipment/add'])
+
+    // ฟังก์ชันสำหรับการแก้ไข Resource
+    editResource(resourceId: number): void {
+      this.router.navigate([`/${this.selectedView}/edit`, resourceId]);
     }
-  }
-  
 }

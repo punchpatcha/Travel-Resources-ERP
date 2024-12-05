@@ -156,7 +156,6 @@ export class AddEquipmentComponent implements OnInit {
 
    // ฟังก์ชันสำหรับกำหนดคลาส CSS ตามสถานะ แต้งสี
   getStatusClass(status?: string): string {
-    console.log('Equipment status:', this.equipment.status);
 
     if (!status) {
       return 'status-default'; // ค่าเริ่มต้นเมื่อไม่มีค่า `status`
@@ -205,6 +204,7 @@ export class AddEquipmentComponent implements OnInit {
   goBack() {
     this.router.navigate(['/resource'], {
       queryParams: { type: 'equipment' },
+
     });
 }
 

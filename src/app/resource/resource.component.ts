@@ -1,4 +1,4 @@
-import { Component,OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -21,15 +21,16 @@ export class ResourceComponent implements OnInit {
     private route: ActivatedRoute, // เพิ่มเข้าไป
     private resourceService: ResourceService
   ) {}
-  
+
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       console.log('Query params:', params); // ตรวจสอบค่าที่รับมา
       if (params['type']) {
         this.selectedView = params['type'];
+        
       }
     });
-  
+
     this.loadResources();
   }
 
@@ -45,7 +46,6 @@ export class ResourceComponent implements OnInit {
     );
   }
 
-
   // กรองรายการตามประเภทที่เลือก (vehicles หรือ equipment)
   filteredResources() {
     return this.resources
@@ -54,10 +54,9 @@ export class ResourceComponent implements OnInit {
           return 'plateNumber' in item; // ตรวจสอบว่าเป็น vehicle หรือไม่
         } else if (this.selectedView === 'equipment') {
           return 'totalUnits' in item; // ตรวจสอบว่าเป็น equipment หรือไม่
-        } else{
-          return 'role' in item; 
+        } else {
+          return 'role' in item;
         }
-  
       })
       .filter(
         (item) =>
@@ -71,7 +70,6 @@ export class ResourceComponent implements OnInit {
     // สมมติว่าถ้ามีหลาย status จะคั่นด้วย ","
     return status.split(',').map((s) => s.trim());
   }
-
 
   // ใช้กำหนดคลาสสำหรับสถานะ
   getStatusClass(status: string) {
@@ -88,14 +86,25 @@ export class ResourceComponent implements OnInit {
         return '';
     }
   }
+
+  // สำหรับ edit แต่ละประเภท
+  navigateToEditResource(resourceId: string) {
+    this.router.navigate(['resource/edit-equipment/', resourceId]);
+  }
+
   navigateToAddResource() {
     if (this.selectedView === 'vehicles') {
-      this.router.navigate(['resource/vehicles/add'], { queryParams: { type: 'vehicles' } });
+      this.router.navigate(['resource/vehicles/add'], {
+        queryParams: { type: 'vehicles' },
+      });
     } else if (this.selectedView === 'equipment') {
-      this.router.navigate(['resource/equipment/add'], { queryParams: { type: 'equipment' } });
+      this.router.navigate(['resource/equipment/add'], {
+        queryParams: { type: 'equipment' },
+      });
     } else if (this.selectedView == 'staff') {
-      this.router.navigate(['resource/staff/add'], { queryParams: { type: 'staff' } });
+      this.router.navigate(['resource/staff/add'], {
+        queryParams: { type: 'staff' },
+      });
     }
   }
-  
 }

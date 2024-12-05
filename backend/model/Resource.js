@@ -25,10 +25,9 @@ const ResourceSchema = new mongoose.Schema(
     },
     lastUsed: {
       type: Date,
-      required: function () {
-        return this.type === "Vehicles" || this.type === "Equipment";
-      },
+      required: false, // ไม่จำเป็นต้องกรอกข้อมูล
     },
+    
 
     // เฉพาะ Vehicle
     plateNumber: {

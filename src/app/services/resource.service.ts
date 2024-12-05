@@ -18,6 +18,8 @@ export interface Resource {
   contact?: string;
   lastUsed?:Date;
   lastAssignment?:Date;
+  maintenanceDate?:string;
+  image?: string | null; // เพิ่ม `null` เพื่อรองรับ
 }
 
 @Injectable({
@@ -50,8 +52,9 @@ export class ResourceService {
     return this.http.put<Resource>(`${this.apiUrl}/${id}`, updates);
   }
   
-
   deleteResource(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+
+  
 }

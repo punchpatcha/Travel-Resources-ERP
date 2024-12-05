@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ResourceService, Resource } from '../services/resource.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   imports: [CommonModule, FormsModule],
@@ -15,10 +16,20 @@ export class ResourceComponent implements OnInit {
   selectedView: string = 'vehicles'; // มุมมองที่เลือก (vehicles/equipment)
   resources: Resource[] = []; // ตัวแปรสำหรับเก็บข้อมูลจาก MongoDB
 
-  constructor(private router: Router, private resourceService: ResourceService) {}
-
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute, // เพิ่มเข้าไป
+    private resourceService: ResourceService
+  ) {}
+  
   ngOnInit(): void {
-    // เรียกใช้เมธอดเพื่อดึงข้อมูลจาก API เมื่อ component ถูกโหลด
+    this.route.queryParams.subscribe(params => {
+      console.log('Query params:', params); // ตรวจสอบค่าที่รับมา
+      if (params['type']) {
+        this.selectedView = params['type'];
+      }
+    });
+  
     this.loadResources();
   }
 
@@ -67,7 +78,7 @@ export class ResourceComponent implements OnInit {
     switch (status.toLowerCase()) {
       case 'available':
         return 'status available';
-      case 'under maintenance':
+      case 'maintenance':
         return 'status canceled';
       case 'booked':
         return 'status booked';
@@ -79,11 +90,12 @@ export class ResourceComponent implements OnInit {
   }
   navigateToAddResource() {
     if (this.selectedView === 'vehicles') {
-      this.router.navigate(['resource/vehicles/add']);
+      this.router.navigate(['resource/vehicles/add'], { queryParams: { type: 'vehicles' } });
     } else if (this.selectedView === 'equipment') {
-      this.router.navigate(['resource/equipment/add']);
+      this.router.navigate(['resource/equipment/add'], { queryParams: { type: 'equipment' } });
     } else if (this.selectedView == 'staff') {
-      this.router.navigate(['resource/staff/add']);
+      this.router.navigate(['resource/staff/add'], { queryParams: { type: 'staff' } });
     }
   }
+  
 }

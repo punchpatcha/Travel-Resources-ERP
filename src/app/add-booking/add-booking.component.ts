@@ -6,7 +6,6 @@ import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { BookingService, Booking } from '../services/booking.service';
 import { ResourceService, Resource } from '../services/resource.service';
-import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-add-booking',

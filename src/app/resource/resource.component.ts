@@ -105,9 +105,11 @@ export class ResourceComponent implements OnInit {
   }
   
   navigateToEditResource(resourceId: string) {
-    this.router.navigate([`resource/edit-equipment/${resourceId}`], {
-      queryParams: { type: this.selectedView }, // ส่งประเภทที่เลือกไปด้วย
+    const editPath = `resource/edit-${this.selectedView}/${resourceId}`; // สร้างเส้นทางตามประเภทที่เลือก
+    this.router.navigate([editPath], {
+      queryParams: { type: this.selectedView }, // ส่งประเภทใน queryParams
     });
   }
+  
   
   }

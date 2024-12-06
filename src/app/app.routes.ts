@@ -19,5 +19,8 @@ export const appRoutes: Routes = [
   { path: 'resource/staff/add', component: AddStaffComponent },
 
   { path: 'resource/edit-equipment/:id', component: EditEquipmentComponent },
+  // ใส่หน้า edit ต่อตรงนี้
+  // { path: 'resource/edit-vehicles/:id', component: EditVehiclesComponent },
+  // { path: 'resource/edit-staff/:id', component: EditStaffComponent },
 
 ];

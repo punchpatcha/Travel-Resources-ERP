@@ -18,8 +18,6 @@ export class AddEquipmentComponent implements OnInit {
     name: '',
     type: 'Equipment',
     category: '',
-    totalUnits: 1,
-    availableUnits: 1,
     status: 'Available',
     maintenanceDate: '',
     image: '',
@@ -98,19 +96,7 @@ export class AddEquipmentComponent implements OnInit {
     }
   }
 
-  // ฟังก์ชันสำหรับเพิ่มจำนวนหน่วย
-  incrementUnit() {
-    if (this.equipment.totalUnits != null) {
-      this.equipment.totalUnits++;
-    }
-  }
 
-  // ฟังก์ชันสำหรับลดจำนวนหน่วย
-  decrementUnit() {
-    if (this.equipment.totalUnits && this.equipment.totalUnits > 1) {
-      this.equipment.totalUnits--;
-    }
-  }
 
   //ส่วนของเลือกรูป จัดการขนาดรูป ไม่ให้ใหญ่เกินไป
   onImageSelected(event: Event) {
@@ -186,7 +172,6 @@ export class AddEquipmentComponent implements OnInit {
     if (this.isFormValid()) {
       const newResource: Resource = {
         ...this.equipment,
-        availableUnits: this.equipment.totalUnits, // ตั้งค่าให้ Available Units เท่ากับ Total Units ตอนสร้างใหม่
       } as Resource;
 
       this.resourceService.createResource(newResource).subscribe(
@@ -220,7 +205,6 @@ export class AddEquipmentComponent implements OnInit {
     return !!(
       this.equipment.name &&
       this.equipment.category &&
-      this.equipment.totalUnits &&
       this.equipment.status
     );
   }

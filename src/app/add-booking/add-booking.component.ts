@@ -74,10 +74,12 @@ export class AddBookingComponent implements OnInit {
   saveBooking() {
     this.isLoading = true;
     const today = new Date();
-    const bookingId = `BK-${today.getDate()}${today.getMonth() + 1}${today.getFullYear()}${today.getHours()}${today.getMinutes()}${today.getSeconds()}`;
+    const bookingId = `BK-${today.getDate()}${
+      today.getMonth() + 1
+    }${today.getFullYear()}${today.getHours()}${today.getMinutes()}${today.getSeconds()}`;
     this.bookingData.bookingId = bookingId;
     this.bookingData.details = JSON.stringify(this.selectedChecklist);
-  
+
     this.bookingService.addBooking(this.bookingData).subscribe(
       (response) => {
         console.log('Booking saved successfully:', response);
@@ -90,7 +92,7 @@ export class AddBookingComponent implements OnInit {
       }
     );
   }
-  
+
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
     console.log('Dropdown toggled. Current category:', this.currentCategory);
@@ -153,22 +155,8 @@ export class AddBookingComponent implements OnInit {
         'lastUsed',
       ];
     } else if (this.currentCategory === 'Equipment') {
-      this.tableHeaders = [
-        'Name',
-        'Category',
-        'Available Units',
-        'Total Units',
-        'Status',
-        'Last Used',
-      ];
-      this.tableFields = [
-        'name',
-        'category',
-        'availableUnits',
-        'totalUnits',
-        'status',
-        'lastUsed',
-      ];
+      this.tableHeaders = ['Name', 'Category', 'Status', 'Last Used'];
+      this.tableFields = ['name', 'category', 'status', 'lastUsed'];
     } else if (this.currentCategory === 'Staff') {
       this.tableHeaders = [
         'Name',

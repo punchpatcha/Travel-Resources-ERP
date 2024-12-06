@@ -12,8 +12,6 @@ export interface Resource {
   status: string;
   plateNumber?: string;
   capacity?: number;
-  availableUnits?: number;
-  totalUnits?: number;
   role?: string;
   contact?: string;
   lastUsed?: Date;

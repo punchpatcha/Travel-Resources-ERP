@@ -22,8 +22,6 @@
       <tr *ngIf="selectedView === 'equipment'">
         <th>Name</th>
         <th>Category</th>
-        <th>Available Units</th>
-        <th>Total Units</th>
         <th>Status</th>
         <th>Last Used</th>
         <th>Actions</th>
@@ -41,13 +39,14 @@
     <tbody>
       <tr *ngFor="let item of filteredResources()">
         <td>{{ item.name }}</td>
-        <td>{{ item.category }}</td>
+        <td *ngIf="selectedView === 'staff'">{{ item.role }}</td>
+
+        <td *ngIf="selectedView === 'vehicles'">{{ item.category }}</td>
+        <td *ngIf="selectedView === 'equipment'">{{ item.category }}</td>
         <td *ngIf="selectedView === 'vehicles'">{{ item.plateNumber }}</td>
         <td *ngIf="selectedView === 'vehicles'">{{ item.capacity }}</td>
-        <td *ngIf="selectedView === 'equipment'">{{ item.availableUnits }}</td>
-        <td *ngIf="selectedView === 'equipment'">{{ item.totalUnits }}</td>
         <!-- staff header-->
-        <td *ngIf="selectedView === 'staff'">{{ item.role }}</td>
+        <td *ngIf="selectedView === 'staff'">{{ item.contact }}</td>
 
         <td>
           <div class="status-container">

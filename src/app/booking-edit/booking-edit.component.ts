@@ -30,7 +30,7 @@ export class BookingEditComponent implements OnInit {
   categories = ['Vehicles', 'Equipment', 'Staff'];
   currentCategory = 'Vehicles';
   isDropdownOpen = false;
-
+  isEditable: boolean = true; // ประกาศตัวแปร isEditable
   tableHeaders: string[] = [];
   tableFields: string[] = [];
   currentItems: any[] = [];
@@ -62,10 +62,12 @@ export class BookingEditComponent implements OnInit {
       (booking) => {
         this.bookingData = booking;
         this.selectedChecklist = JSON.parse(booking.details || '[]'); // แปลง details กลับมาเป็น Array
+        this.isEditable = booking.status !== 'Returned'; // ตั้งค่า isEditable ตาม status
         this.loadItems(this.currentCategory); // โหลดรายการ Resource ตาม category ปัจจุบัน
       },
       (error) => console.error('Error loading booking:', error)
     );
+
     if (bookingId) {
       this.loadBooking(bookingId);
     }
@@ -267,16 +269,12 @@ export class BookingEditComponent implements OnInit {
       this.tableHeaders = [
         'Name',
         'Category',
-        'Available Units',
-        'Total Units',
         'Status',
         'Last Used',
       ];
       this.tableFields = [
         'name',
         'category',
-        'availableUnits',
-        'totalUnits',
         'status',
         'lastUsed',
       ];

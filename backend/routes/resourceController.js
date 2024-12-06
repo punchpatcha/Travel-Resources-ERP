@@ -61,11 +61,6 @@ exports.updateResource = async (req, res) => {
       return res.status(404).json({ error: "Resource not found" });
     }
 
-    // คำนวณ available units ใหม่
-    if (updatedData.totalUnits !== undefined && currentResource.totalUnits !== updatedData.totalUnits) {
-      const difference = updatedData.totalUnits - currentResource.totalUnits;
-      updatedData.availableUnits = currentResource.availableUnits + difference;
-    }
 
     // ตรวจสอบการอัปโหลดไฟล์ใหม่หรือไม่
     if (req.body.image && req.body.image.startsWith("data:image/")) {

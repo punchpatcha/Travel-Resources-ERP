@@ -10,8 +10,27 @@
     </div>
     <h2>{{ bookingData.bookingId }}</h2>
     <div class="actions">
-      <button class="btn blue" (click)="saveBooking()">Save</button>
-      <button class="btn gray" (click)="deleteBooking()">Delete</button>
+      <button
+        class="btn"
+        [ngClass]="{
+          'btn-gray': bookingData.status == 'Returned',
+          'btn-blue': bookingData.status !== 'Returned'
+        }"
+        [disabled]="bookingData.status === 'Returned'"
+        (click)="saveBooking()"
+      >
+        Save
+      </button>
+      <button
+        class="btn"
+        [ngClass]="{
+          'btn-gray': bookingData.status !== 'Returned',
+          'btn-blue': bookingData.status === 'Returned'
+        }"
+        (click)="deleteBooking()"
+      >
+        Delete
+      </button>
     </div>
   </div>
   <hr />
@@ -30,6 +49,7 @@
             type="text"
             [(ngModel)]="bookingData.customerName"
             name="customerName"
+            [readonly]="!isEditable"
             required
           />
         </div>
@@ -38,7 +58,7 @@
           <div
             class="details-dropdown"
             [class.filled]="selectedDetails.length > 0"
-            (click)="openDetailsModal()"
+            (click)="isEditable ? openDetailsModal() : null"
           >
             <span>
               {{
@@ -58,6 +78,7 @@
             [(ngModel)]="bookingData.startDate"
             name="startDate"
             required
+            [readonly]="!isEditable"
           />
         </div>
         <div class="form-group">
@@ -68,6 +89,7 @@
             type="date"
             [(ngModel)]="bookingData.endDate"
             name="endDate"
+            [readonly]="!isEditable"
             required
           />
         </div>
@@ -78,6 +100,7 @@
             id="status"
             [(ngModel)]="bookingData.status"
             name="status"
+            [disabled]="!isEditable"
             required
           >
             <option *ngFor="let status of statuses" [value]="status">

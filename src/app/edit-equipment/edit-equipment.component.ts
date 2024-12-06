@@ -17,7 +17,6 @@ export class EditEquipmentComponent implements OnInit {
     type: '',
     category: '',
     status: '',
-    totalUnits: 1,
   };
   resourceId: string | null = null;
   previewImage: string | null = null;
@@ -74,18 +73,6 @@ export class EditEquipmentComponent implements OnInit {
 
   saveChanges(updatedResource: Resource): void {
     if (this.resourceId) {
-      // ตรวจสอบให้แน่ใจว่า availableUnits มีค่าก่อนการคำนวณ
-      if (
-        updatedResource.totalUnits !== undefined &&
-        this.resource.totalUnits !== undefined
-      ) {
-        // คำนวณ availableUnits ใหม่หาก totalUnits เปลี่ยนแปลง
-        const difference =
-          updatedResource.totalUnits - this.resource.totalUnits;
-        updatedResource.availableUnits =
-          (this.resource.availableUnits ?? 0) + difference; // ใช้ ?? เพื่อกำหนดค่าเริ่มต้นเป็น 0 หาก undefined
-      }
-
       this.resourceService
         .updateResource(this.resourceId, updatedResource)
         .subscribe(
@@ -167,20 +154,6 @@ export class EditEquipmentComponent implements OnInit {
     this.previewImage = null;
   }
 
-  incrementUnit(): void {
-    if (this.resource.totalUnits !== undefined) {
-      this.resource.totalUnits++;
-    }
-  }
-
-  decrementUnit(): void {
-    if (
-      this.resource.totalUnits !== undefined &&
-      this.resource.totalUnits > 1
-    ) {
-      this.resource.totalUnits--;
-    }
-  }
 
   getStatusClass(status: string | undefined): string {
     return status === 'Available' ? 'status-available' : 'status-maintenance';

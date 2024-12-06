@@ -98,18 +98,7 @@
     background-color: #ffe6e6;
   }
   
-  .edit-btn {
-    border: none;
-    background-color: transparent;
-    cursor: pointer; /* เปลี่ยนเคอร์เซอร์เมื่อเลื่อนมาบนปุ่ม */
-    color: #DDDDDD; /* สีของขอบ */
-    font-size: 32px; /* ขนาดไอคอน */
-  }
-  
-  .edit-btn:hover {
-    color: #007bff; /* เปลี่ยนสีเมื่อ hover */
-  }
-  
+
   .pagination {
     display: flex;
     justify-content: center;
@@ -128,6 +117,34 @@
     border-radius: 4px; /* มุมโค้ง */
     cursor: pointer; /* เปลี่ยนเคอร์เซอร์เมื่อเลื่อนมาบนปุ่ม */
   }
+  
+  
+  .edit-btn:hover {
+    color: #007bff; /* เปลี่ยนสีเมื่อ hover */
+  }
+
+  .edit-btn {
+    background-color: transparent;
+    border: none;
+    color: #DDDDDD; /* สีของขอบ */
+    cursor: pointer;
+    transition: opacity 0.3s;
+ font-size: 32px;
+  }
+  
+  .edit-btn:hover {
+    opacity: 0.7; /* ลดความทึบเมื่อ hover */
+  }
+  
+  .edit-btn[disabled] {
+    cursor: not-allowed; /* เปลี่ยน cursor เมื่อปุ่มถูกปิดการใช้งาน */
+    opacity: 0.5; /* ทำให้ปุ่มดูจางลง */
+  }
+  
+  .edit-btn[disabled] .fa {
+    color: #DDDDDD; /* เปลี่ยนสีไอคอนเมื่อปุ่ม disabled */
+  }
+  
 
   /* For smaller screens (mobile view) */
   @media only screen and (max-width: 768px) {

@@ -46,18 +46,7 @@ const ResourceSchema = new mongoose.Schema(
       type: Date, // วันที่กำหนดบำรุงรักษา
     },
     // เฉพาะ Equipment
-    availableUnits: {
-      type: Number,
-      required: function () {
-        return this.type === "Equipment";
-      },
-    },
-    totalUnits: {
-      type: Number,
-      required: function () {
-        return this.type === "Equipment";
-      },
-    },
+  
     // เฉพาะ Staff
     role: {
       type: String,

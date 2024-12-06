@@ -20,8 +20,6 @@ const BookingSchema = new mongoose.Schema({
       status: { type: String, enum: ["Available", "Booked", "In Use"], default: "Available" }, // Status
       placeNumber: { type: String }, // เฉพาะ Vehicle
       capacity: { type: Number }, // เฉพาะ Vehicle
-      availableUnits: { type: Number }, // เฉพาะ Equipment
-      totalUnits: { type: Number }, // เฉพาะ Equipment
       role: { type: String }, // สำหรับ Staff
       contact: { type: String }, // เฉพาะ Staff
       lastAssignment: { type: Date }, // เฉพาะ Staff

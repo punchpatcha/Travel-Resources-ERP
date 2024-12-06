@@ -68,7 +68,12 @@ export class ResourceComponent implements OnInit {
   }
 }
   // ฟังก์ชันสำหรับการแก้ไข Resource
-  editResource(resourceId: number): void {
-    this.router.navigate([`/${this.selectedView}/edit`, resourceId]);
+  editResource(resourceId: string): void {
+    console.log('Resource ID:', resourceId); // ตรวจสอบว่ามีค่า `_id` หรือไม่
+    if (resourceId) {
+      this.router.navigate([`resource/${this.selectedView}/edit`, resourceId]);
+    } else {
+      console.error('Invalid resource ID:', resourceId);
+    }
   }
 }

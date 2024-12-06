@@ -1,403 +1,370 @@
 /* General Layout */
 .main-container {
-    padding: 20px;
-    margin-bottom: 50px;
+  padding: 20px;
+  margin-bottom: 50px;
+}
+.content {
+  display: flex;
+  justify-content: space-between;
+}
+.form-container {
+  width: 50%; /* ลดขนาดให้เหมาะสม */
+}
+.result-section {
+  width: 45%; /* ให้มีพื้นที่แสดงผล */
+  border-left: 1px solid #ccc;
+  border-radius: 4px;
+  margin-left: 20px;
+  padding: 0px 30px;
+  font-size: 13px;
+  font-weight: 400;
+  text-align: left;
+}
+
+.result-section h3 {
+  font-size: 16px;
+  font-weight: 400;
+  text-align: left;
+}
+
+.result-section a {
+  font-size: 13px;
+  font-weight: 400;
+  color: #5b5b5b;
+}
+
+.result-section p {
+  font-size: 13px;
+  font-weight: 400;
+  color: #000000;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  color: #007bff;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.back-button i {
+  font-size: 18px;
+}
+
+.back-button:hover {
+  color: #0056b3;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.actions .btn {
+  margin-left: 10px;
+  padding: 5px 15px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+.actions i {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+hr {
+  margin: 20px 0;
+  border: 0.3px solid #cecece82;
+}
+
+/* Form Section */
+.form-container {
+  width: 60%;
+}
+
+input.name {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #cecece;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.form-group {
+  margin-bottom: 50px;
+}
+
+/* ทำให้ dropdown แสดงข้างล่าง */
+.form-group select {
+  width: 100%; /* ให้ความกว้างพอดีกับฟอร์ม */
+  padding: 8px; /* เพิ่ม padding ให้ดูสวย */
+  border: 1px solid #cccccc; /* กรอบสีเทา */
+  border-radius: 4px; /* มุมมน */
+  background-color: white; /* พื้นหลังสีขาว */
+  appearance: none; /* ลบลูกศรเริ่มต้น */
+  cursor: pointer;
+}
+
+label {
+  font-size: 13px;
+  font-weight: 400;
+  display: block;
+  margin-bottom: 5px;
+  color: #5b5b5b;
+}
+
+.required {
+  color: red;
+}
+
+input.start,
+input.end {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #cecece;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #cecece;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.details-dropdown {
+  width: 100%;
+  padding: 20px;
+  border: 1px solid #cecece;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.details-dropdown.filled,
+input {
+  color: black; /* สีข้อความเมื่อมีการเลือกค่า */
+}
+
+/* Summary Section */
+.summary {
+  width: 35%;
+  margin-left: 20px;
+}
+
+.details-section,
+.list-section {
+  margin-bottom: 15px;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.quantity {
+  float: right;
+  font-size: 13px;
+  font-weight: 400;
+  color: #5b5b5b;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #fff;
+  width: 80%;
+  padding: 20px;
+  border-radius: 8px;
+  margin-left: 250px;
+  padding-bottom: 20px;
+}
+
+.modal-header,
+h3 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 400;
+  color: #5b5b5b;
+}
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px;
+  border: none;
+  gap: 20px;
+}
+.fa-solid {
+  color: #0f80f6;
+}
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  z-index: 10;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.dropdown-menu option {
+  cursor: pointer;
+  padding: 10px;
+}
+
+.dropdown-menu option:hover {
+  background-color: #cce5ff;
+  color: rgb(0, 0, 0);
+}
+.dropdown-menu option.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.fa-chevron-down {
+  pointer-events: none; /* Icon ไม่ทำงานเมื่อกด */
+}
+
+.status-green {
+  color: #77bfa3;
+}
+
+/* สีฟ้าสำหรับ In Use */
+.status-blue {
+  color: #0f80f6;
+}
+
+/* สีส้มสำหรับ Pending */
+.status-orange {
+  color: #fa8b29;
+}
+
+/* สีเหลืองสำหรับ Pending*/
+.status-yellow {
+  color: #f69459;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+thead th {
+  text-align: left;
+  font-size: 13px;
+  font-weight: 400;
+  padding: 8px;
+  border-bottom: 1.5px solid #cecece;
+  border-top: 1px solid #cecece;
+}
+
+tbody td {
+  padding: 8px;
+}
+
+td {
+  color: #5b5b5b;
+}
+
+input.checkbox {
+  margin: 0px 10px;
+}
+td.status-available {
+  color: #77bfa3;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.loading-overlay i {
+  font-size: 3rem; /* ปรับขนาดตามที่ต้องการ */
+  color: white;
+  animation: spin 1s linear infinite;
+}
+
+.btn.blue.btn:disabled {
+  background-color: rgb(225, 225, 225);
+  color: #ffffff; /* เปลี่ยนสีข้อความหากต้องการ */
+  cursor: not-allowed;
+}
+
+.btn.gray {
+  background-color: rgb(225, 225, 225);
+  color: #000000; /* เปลี่ยนสีข้อความหากต้องการ */
+}
+
+.btn.blue {
+  background-color: #007bff;
+  color: #ffffff; /* เปลี่ยนสีข้อความหากต้องการ */
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
   }
-  .content {
-    display: flex;
-    justify-content: space-between;
-  
-  
+  to {
+    transform: rotate(360deg);
   }
-  .form-container {
-    width: 50%; /* ลดขนาดให้เหมาะสม */
-  
-  
-  }
-  .result-section {
-    width: 45%; /* ให้มีพื้นที่แสดงผล */
-    border-left: 1px solid #ccc;
-    border-radius: 4px;
-    margin-left: 20px;
-    padding: 0px 30px;
-    font-size: 13px;
-    font-weight: 400;
-    text-align: left;
-  }
-  
-  .result-section h3 {
-    font-size: 16px;
-    font-weight: 400;
-    text-align: left;
-  }
-  
-  .result-section a {
-    font-size: 13px;
-    font-weight: 400;
-    color: #5B5B5B;
-  }
-  
-  .result-section p {
-    font-size: 13px;
-    font-weight: 400;
-    color: #000000;
-  }
-  
-  
-  .back-button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 16px;
-    color: #007bff;
-    cursor: pointer;
-    margin-right: 20px;
-  }
-  
-  .back-button i {
-    font-size: 18px;
-  }
-  
-  .back-button:hover {
-    color: #0056b3;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .header h2 {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 500;
-  }
-  
-  .actions .btn {
-    margin-left: 10px;
-    padding: 5px 15px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-   
-  }
-  
-  .actions i {
-    margin-left: 10px;
-    cursor: pointer;
-  }
-  
-  .btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .btn-gray {
-    background-color: #ededed;
-    font-size: 13px;
-    font-weight: 400;
-    color: rgb(0, 0, 0);
-  }
-  
-  .btn-blue {
-    background-color: #007bff; /* สีฟ้า */
-    color: white; /* สีข้อความสีขาว */
-  }
-  
- 
-  
-  hr {
-    margin: 20px 0;
-    border: 0.3px solid #cecece82;
-  }
-  
-  /* Form Section */
-  .form-container {
-    width: 60%;
-    
-  }
-  
-  input.name{
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #CECECE;
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: 400;
-  }
-  
-  .form-group {
-    margin-bottom: 50px;
-  }
-  
-  /* ทำให้ dropdown แสดงข้างล่าง */
-  .form-group select {
-    width: 100%;               /* ให้ความกว้างพอดีกับฟอร์ม */
-    padding: 8px;              /* เพิ่ม padding ให้ดูสวย */
-    border: 1px solid #cccccc; /* กรอบสีเทา */
-    border-radius: 4px;        /* มุมมน */
-    background-color: white;   /* พื้นหลังสีขาว */
-    appearance: none;          /* ลบลูกศรเริ่มต้น */
-    cursor: pointer;
-  }
-  
-  
-  
-  label {
-    font-size: 13px;
-    font-weight: 400;
-    display: block;
-    margin-bottom: 5px;
-    color: #5B5B5B;
-  }
-  
-  .required {
-    color: red;
-  }
-  
-  input.start,input.end {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #CECECE;
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: 400;
-  }
-  
-  select{
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #CECECE;
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: 400;
-  }
-  
-  .details-dropdown{
-    width: 100%;
-    padding: 20px;
-    border: 1px solid #CECECE;
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: 400;
-  }
-  
-  .details-dropdown.filled, input {
-    color: black; /* สีข้อความเมื่อมีการเลือกค่า */
-  }
-  
-  
-  /* Summary Section */
-  .summary {
-    width: 35%;
-    margin-left: 20px;
-  }
-  
-  .details-section,
-  .list-section {
-    margin-bottom: 15px;
-    font-size: 13px;
-    font-weight: 400;
-  }
-  
-  .quantity {
-    float: right;
-    font-size: 13px;
-    font-weight: 400;
-    color: #5B5B5B;
-  }
-  
-  /* Modal */
-  .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-   
-  }
-  
+}
+
+@media only screen and (max-width: 768px) {
   .modal-content {
     background: #fff;
     width: 80%;
     padding: 20px;
     border-radius: 8px;
-    margin-left: 250px;
-    padding-bottom: 20px;
+    margin-left: 0;
+    overflow-x: auto;
   }
-  
-  .modal-header, h3 {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 16px;
-    font-weight: 400;
-    color: #5B5B5B;
-    
-  }
-  .dropdown-container {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .dropdown-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    padding: 10px;
-    border: none;
-    gap: 20px;
-  
-  }
-  .fa-solid{
-    color: #0F80F6;
-  }
-  .dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    z-index: 10;
-    font-size: 13px;
-    cursor: pointer;
-    
-  }
-  
-  .dropdown-menu option {
-    cursor: pointer;
-    padding: 10px;
-  }
-  
-  .dropdown-menu option:hover {
-    background-color: #cce5ff;
-    color: rgb(0, 0, 0);
-  }
-  .dropdown-menu option.active {
-    background-color: #007bff;
-    color: white;
-  }
-  
-  
-  .fa-chevron-down {
-    pointer-events: none; /* Icon ไม่ทำงานเมื่อกด */
-  }
-  
-  .status-green {
-    color: #77BFA3;
-  }
-  
-  /* สีฟ้าสำหรับ In Use */
-  .status-blue {
-    color: #0F80F6;
-  }
-  
-  /* สีส้มสำหรับ Pending */
-  .status-orange {
-    color: #FA8B29;
-  }
-  
-  /* สีเหลืองสำหรับ Pending*/
-  .status-yellow {
-    color: #F69459;
-  }
-  
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-    font-weight: 400;
-  }
-  
-  thead th {
-    text-align: left;
-    font-size: 13px;
-    font-weight: 400;
-    padding: 8px;
-    border-bottom: 1.5px solid #CECECE;
-    border-top: 1px solid #CECECE;
-  }
-  
-  tbody td {
-    padding: 8px;
-  }
-  
-  td {
-    color: #5B5B5B;
-  }
-  
-  input.checkbox{
-  margin: 0px 10px;
-  }
-  td.status-available {
-    color: #77BFA3;
-  }
-  
-  .loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  
-  }
-  
-  .loading-overlay i {
-    font-size: 3rem; /* ปรับขนาดตามที่ต้องการ */
-    color: white;
-    animation: spin 1s linear infinite;
-  }
-  
-  .disabled {
-    pointer-events: none; /* ป้องกันการคลิก */
-    opacity: 0.5; /* ลดความชัดเจน */
-  }
-  
-
-  
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  
-  
-
-  
-  @media only screen and (max-width: 768px) {
-    .modal-content {
-      background: #fff;
-      width: 80%;
-      padding: 20px;
-      border-radius: 8px;
-      margin-left: 0;
-      overflow-x: auto;
-    }
-  
-  
-  }
-  
-  
+}

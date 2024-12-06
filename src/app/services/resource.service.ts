@@ -15,7 +15,7 @@ export interface Resource {
   availableUnits?: number;
   totalUnits?: number;
   role?: string;
-  contact?: string;
+  contactNumber?: string;
   lastUsed?: Date;
   lastAssignment?: Date;
   maintenanceDate?: string;

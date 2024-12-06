@@ -7,8 +7,8 @@ import { Resource, ResourceService } from '../services/resource.service';
 @Component({
   selector: 'app-vehicle-edit',
   imports: [CommonModule, FormsModule],
-  templateUrl: './vehicle-edit.component.html',
-  styleUrls: ['./vehicle-edit.component.css'],
+  templateUrl: './edit-vehicles.component.html',
+  styleUrls: ['./edit-vehicles.component.css'],
 })
 export class VehicleEditComponent implements OnInit {
   resource: Resource = {
@@ -23,7 +23,7 @@ export class VehicleEditComponent implements OnInit {
   showModal: boolean = false;
   newCategory: string = '';
   categories: string[] = [];
-  selectedType: string = 'Vehicles'; // ค่าเริ่มต้น
+  selectedType: string = 'vehicles'; // ค่าเริ่มต้น
   constructor(
     private resourceService: ResourceService,
     private route: ActivatedRoute,
@@ -142,7 +142,9 @@ export class VehicleEditComponent implements OnInit {
   }
 
   // Navigate back to resource list
-  goBack(): void {
-    this.router.navigate(['/resource'], { queryParams: { type: 'Vehicles' } });
+  goBack() {
+    this.router.navigate(['/resource'], {
+      queryParams: { type: this.selectedType }, // ส่งค่าประเภทกลับ
+    });
   }
 }

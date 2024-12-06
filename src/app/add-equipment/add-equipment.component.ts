@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ResourceService, Resource } from '../services/resource.service';
 
 @Component({
@@ -18,13 +18,12 @@ export class AddEquipmentComponent implements OnInit {
     name: '',
     type: 'Equipment',
     category: '',
-    totalUnits: 1,
-    availableUnits: 1,
     status: 'Available',
     maintenanceDate: '',
     image: '',
   };
 
+  selectedType: string = 'equipment'; // ค่าเริ่มต้น
   // ตัวแปรสำหรับเก็บรายชื่อหมวดหมู่ที่มีอยู่
   categories: string[] = [];
   // ตัวแปรสำหรับเก็บหมวดหมู่ใหม่ที่กำลังเพิ่ม
@@ -36,15 +35,22 @@ export class AddEquipmentComponent implements OnInit {
 
   constructor(
     private resourceService: ResourceService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   // ฟังก์ชันที่ทำงานตอนเริ่มต้นการโหลดคอมโพเนนต์
   ngOnInit() {
     this.loadCategories(); // โหลดรายชื่อหมวดหมู่ที่มีอยู่
+    // ดึงค่า type จาก queryParams
+    this.route.queryParams.subscribe((params) => {
+      if (params['type']) {
+        this.selectedType = params['type'];
+      }
+    });
   }
 
-   // ฟังก์ชันสำหรับโหลดหมวดหมู่ที่ใช้ในอุปกรณ์
+  // ฟังก์ชันสำหรับโหลดหมวดหมู่ที่ใช้ในอุปกรณ์
   loadCategories() {
     this.resourceService.getAvailableResources({ type: 'Equipment' }).subscribe(
       (data) => {
@@ -62,7 +68,6 @@ export class AddEquipmentComponent implements OnInit {
     );
   }
 
-
   // ฟังก์ชันสำหรับตรวจสอบการเปลี่ยนแปลงหมวดหมู่
   onCategoryChange() {
     if (this.equipment.category === 'Add new category') {
@@ -70,7 +75,7 @@ export class AddEquipmentComponent implements OnInit {
     }
   }
 
-   // ฟังก์ชันสำหรับตรวจสอบการเปลี่ยนแปลงสถานะของอุปกรณ์
+  // ฟังก์ชันสำหรับตรวจสอบการเปลี่ยนแปลงสถานะของอุปกรณ์
   onStatusChange(status: string) {
     console.log('Status changed to:', status);
     this.equipment.status = status;
@@ -81,7 +86,7 @@ export class AddEquipmentComponent implements OnInit {
     this.showModal = false;
   }
 
-   // ฟังก์ชันสำหรับเพิ่มหมวดหมู่ใหม่
+  // ฟังก์ชันสำหรับเพิ่มหมวดหมู่ใหม่
   addNewCategory() {
     if (this.newCategory.trim()) {
       this.categories.unshift(this.newCategory);
@@ -91,19 +96,7 @@ export class AddEquipmentComponent implements OnInit {
     }
   }
 
-  // ฟังก์ชันสำหรับเพิ่มจำนวนหน่วย
-  incrementUnit() {
-    if (this.equipment.totalUnits != null) {
-      this.equipment.totalUnits++;
-    }
-  }
 
-   // ฟังก์ชันสำหรับลดจำนวนหน่วย
-  decrementUnit() {
-    if (this.equipment.totalUnits && this.equipment.totalUnits > 1) {
-      this.equipment.totalUnits--;
-    }
-  }
 
   //ส่วนของเลือกรูป จัดการขนาดรูป ไม่ให้ใหญ่เกินไป
   onImageSelected(event: Event) {
@@ -146,7 +139,7 @@ export class AddEquipmentComponent implements OnInit {
     }
   }
 
-   // ฟังก์ชันสำหรับเปิดช่องเลือกรูปภาพ
+  // ฟังก์ชันสำหรับเปิดช่องเลือกรูปภาพ
   onBrowseImage(): void {
     const fileInput = document.getElementById(
       'imageUpload'
@@ -154,10 +147,8 @@ export class AddEquipmentComponent implements OnInit {
     fileInput?.click();
   }
 
-   // ฟังก์ชันสำหรับกำหนดคลาส CSS ตามสถานะ แต้งสี
+  // ฟังก์ชันสำหรับกำหนดคลาส CSS ตามสถานะ แต้งสี
   getStatusClass(status?: string): string {
-    console.log('Equipment status:', this.equipment.status);
-
     if (!status) {
       return 'status-default'; // ค่าเริ่มต้นเมื่อไม่มีค่า `status`
     }
@@ -171,25 +162,25 @@ export class AddEquipmentComponent implements OnInit {
     }
   }
 
- // ฟังก์ชันสำหรับลบภาพตัวอย่าง
- removeImage(): void {
-  this.previewImage = null; // รีเซ็ตค่าของ previewImage
-}
+  // ฟังก์ชันสำหรับลบภาพตัวอย่าง
+  removeImage(): void {
+    this.previewImage = null; // รีเซ็ตค่าของ previewImage
+  }
 
-   // ฟังก์ชันสำหรับบันทึก equipment ใหม่
+  // ฟังก์ชันสำหรับบันทึก equipment ใหม่
   saveEquipment() {
     if (this.isFormValid()) {
       const newResource: Resource = {
         ...this.equipment,
-        availableUnits: this.equipment.totalUnits, // ตั้งค่าให้ Available Units เท่ากับ Total Units ตอนสร้างใหม่
       } as Resource;
 
       this.resourceService.createResource(newResource).subscribe(
         (response) => {
           console.log('Equipment added successfully:', response);
           // เพิ่ม queryParams ที่ type เป็น 'equipment เพื่อให้กลับไปเห็น resource ใหม่'
+          console.log('Saving equipment...');
           this.router.navigate(['/resource'], {
-            queryParams: { type: 'equipment' },
+            queryParams: { type: this.selectedType }, // ส่งค่าประเภทกลับ
           });
         },
         (error) => {
@@ -201,19 +192,19 @@ export class AddEquipmentComponent implements OnInit {
     }
   }
 
-   // ฟังก์ชันสำหรับกลับไปยังหน้า Resource
+  // ฟังก์ชันสำหรับกลับไปยังหน้า Resource
+
   goBack() {
     this.router.navigate(['/resource'], {
-      queryParams: { type: 'equipment' },
+      queryParams: { type: this.selectedType }, // ส่งค่าประเภทกลับ
     });
-}
+  }
 
   // ฟังก์ชันสำหรับตรวจสอบความครบถ้วนของฟอร์ม
   isFormValid(): boolean {
     return !!(
       this.equipment.name &&
       this.equipment.category &&
-      this.equipment.totalUnits &&
       this.equipment.status
     );
   }

@@ -68,7 +68,7 @@ hr {
 }
 
 .form-group {
-  margin-bottom: 50px;
+ margin-bottom: 10%;
   padding-left: 20px;
 }
 
@@ -160,7 +160,6 @@ input[type="number"] {
   width: 100%;
   height: 100%;
   object-fit: cover; /* ขยายเต็มพื้นที่ */
-
 }
 
 .browse-container {
@@ -175,7 +174,6 @@ input[type="number"] {
 .browse-text {
   font-size: 13px;
   font-weight: 500;
-  margin-bottom: 8px;
   transition: color 0.3s ease; /* เพิ่มเอฟเฟกต์เมื่อ hover */
 }
 
@@ -218,8 +216,8 @@ input[type="number"] {
 }
 
 .form-data-container {
-  margin-top: 5px;
-  padding-right: 50px;
+  margin-top: 20px;
+
 }
 
 .form-data-container h3 {
@@ -244,14 +242,13 @@ input[type="number"] {
 
 .form-data-container ul li strong {
   color: #5b5b5b;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .form-data-container ul li span {
   color: #000000;
   text-align: right;
 }
-
 
 .back-button {
   display: flex;
@@ -325,8 +322,8 @@ button.Addmodal {
   z-index: 999;
 }
 
-.status-available{
-  color: #77BFA3 !important;
+.status-available {
+  color: #77bfa3 !important;
 }
 
 /* สีเหลืองสำหรับ Pending*/

@@ -20,11 +20,19 @@ export class BookingComponent {
   fetchBookings() {
     this.http.get<any[]>('http://localhost:3000/api/bookings')
       .subscribe((data) => {
-        // Map data to include only categories from details
+        // Map data to include categories and roles from details
         this.bookings = data.map(booking => {
           const parsedDetails = JSON.parse(booking.details || '[]'); // แปลง JSON String กลับเป็น Array
-          const categories = Array.from(new Set(parsedDetails.map((item: any) => item.category))); // ดึง category
-          return { ...booking, details: categories.join(', ') }; // เก็บ category เป็น String
+          
+          // ดึงทั้ง category และ role แล้วรวมเป็นข้อความเดียว
+          const combinedDetails = Array.from(new Set(parsedDetails.flatMap((item: any) => {
+            const details = [];
+            if (item.category) details.push(item.category); // เพิ่ม category ถ้ามี
+            if (item.role) details.push(item.role); // เพิ่ม role ถ้ามี
+            return details;
+          })));
+          
+          return { ...booking, details: combinedDetails.join(', ') }; // เก็บข้อมูลรวมเป็น String
         });
       });
   }

@@ -12,13 +12,11 @@ export interface Resource {
   status: string;
   plateNumber?: string;
   capacity?: number;
-  availableUnits?: number;
-  totalUnits?: number;
   role?: string;
   contact?: string;
-  lastUsed?:Date;
-  lastAssignment?:Date;
-  maintenanceDate?:string;
+  lastUsed?: Date;
+  lastAssignment?: string;
+  maintenanceDate?: string;
   image?: string | null; // เพิ่ม `null` เพื่อรองรับ
 }
 
@@ -38,12 +36,13 @@ export class ResourceService {
   getAllResources(): Observable<Resource[]> {
     return this.http.get<Resource[]>(this.apiUrl);
   }
-  
+
   getResource(id: string): Observable<Resource> {
+    console.log("Fetching resource with ID:", id); // ตรวจสอบค่า ID
     return this.http.get<Resource>(`${this.apiUrl}/${id}`);
   }
-
   
+
   createResource(resource: Resource): Observable<Resource> {
     return this.http.post<Resource>(this.apiUrl, resource);
   }
@@ -52,7 +51,10 @@ export class ResourceService {
     return this.http.put<Resource>(`${this.apiUrl}/${id}`, updates);
   }
   
-  deleteResource(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+  deleteResource(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+
+  
 }

@@ -30,7 +30,7 @@ export class BookingEditComponent implements OnInit {
   categories = ['Vehicles', 'Equipment', 'Staff'];
   currentCategory = 'Vehicles';
   isDropdownOpen = false;
-
+  isEditable: boolean = true; // ประกาศตัวแปร isEditable
   tableHeaders: string[] = [];
   tableFields: string[] = [];
   currentItems: any[] = [];
@@ -41,6 +41,7 @@ export class BookingEditComponent implements OnInit {
     name: string;
     category: string;
     quantity: number;
+    role:string
   }[] = [];
 
   constructor(
@@ -62,10 +63,12 @@ export class BookingEditComponent implements OnInit {
       (booking) => {
         this.bookingData = booking;
         this.selectedChecklist = JSON.parse(booking.details || '[]'); // แปลง details กลับมาเป็น Array
+        this.isEditable = booking.status !== 'Returned'; // ตั้งค่า isEditable ตาม status
         this.loadItems(this.currentCategory); // โหลดรายการ Resource ตาม category ปัจจุบัน
       },
       (error) => console.error('Error loading booking:', error)
     );
+
     if (bookingId) {
       this.loadBooking(bookingId);
     }
@@ -83,15 +86,23 @@ export class BookingEditComponent implements OnInit {
       (data) => {
         this.bookingData = data;
         this.selectedChecklist = JSON.parse(this.bookingData.details) || [];
-        this.selectedDetails = this.selectedChecklist.map(
-          (item) => item.category
-        );
+        
+        // รวม category และ role เข้าด้วยกัน
+        const combinedDetails = Array.from(new Set(this.selectedChecklist.flatMap((item) => {
+          const details = [];
+          if (item.category) details.push(item.category); // เพิ่ม category ถ้ามี
+          if (item.role) details.push(item.role); // เพิ่ม role ถ้ามี
+          return details;
+        })));
+  
+        this.selectedDetails = combinedDetails; // เก็บข้อมูลรวมใน selectedDetails
       },
       (error) => {
         console.error('Error loading booking:', error);
       }
     );
   }
+  
 
   openDetailsModal() {
     this.isModalOpen = true;
@@ -226,6 +237,7 @@ export class BookingEditComponent implements OnInit {
           name: item.name,
           category: item.type,
           quantity: 1,
+          role: item.role,
         });
       } else {
         existingItem.quantity++;
@@ -267,16 +279,12 @@ export class BookingEditComponent implements OnInit {
       this.tableHeaders = [
         'Name',
         'Category',
-        'Available Units',
-        'Total Units',
         'Status',
         'Last Used',
       ];
       this.tableFields = [
         'name',
         'category',
-        'availableUnits',
-        'totalUnits',
         'status',
         'lastUsed',
       ];

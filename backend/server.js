@@ -38,7 +38,19 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
 app.use(express.json({ limit: '10mb' })); // กำหนดขนาดสูงสุดของ payload
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cors());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+//ให้ตั้งค่า CORS เพื่ออนุญาตให้ frontend เข้าถึง backend ได้
+const corsOptions = {
+  origin: 'http://localhost:4200', // Angular frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions));
+
+// ให้บริการไฟล์ภาพจากโฟลเดอร์ uploads
+app.use('/uploads', express.static(path.join(__dirname, 'routes/uploads')));
+console.log('Serving files from:', path.join(__dirname, 'routes/uploads'));
 
 // ตั้งค่าเส้นทาง
 app.use('/api/bookings', bookingRouter);

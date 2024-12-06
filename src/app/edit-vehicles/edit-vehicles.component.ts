@@ -5,17 +5,19 @@ import { FormsModule } from '@angular/forms';
 import { Resource, ResourceService } from '../services/resource.service';
 
 @Component({
-  selector: 'app-vehicle-edit',
+  selector: 'app-edit-vehicles',
   imports: [CommonModule, FormsModule],
-  templateUrl: './vehicle-edit.component.html',
-  styleUrls: ['./vehicle-edit.component.css'],
+  templateUrl: './edit-vehicles.component.html',
+  styleUrls: ['./edit-vehicles.component.css'],
 })
-export class VehicleEditComponent implements OnInit {
+export class EditVehiclesComponent implements OnInit {
   resource: Resource = {
     _id: '',
     name: '',
     type: '',
     category: '',
+    plateNumber: '',
+    capacity: 0,
     status: '',
   };
   resourceId: string | null = null;
@@ -121,12 +123,53 @@ export class VehicleEditComponent implements OnInit {
     this.resource.image = '';
   }
 
+  isPlateNumberValid(plateNumber: string): boolean {
+    const regex = /^[A-Za-z]{2}-\d{4}$/; // รูปแบบ: ตัวอักษร 2 ตัว, ตามด้วย "-", และตัวเลข 4 หลัก
+    return regex.test(plateNumber);
+  }
+  
+  // ตรวจสอบความซ้ำซ้อนของ plateNumber
+  isPlateNumberUnique(plateNumber: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.resourceService.getAvailableResources({ type: 'Vehicles' }).subscribe(
+        (data) => {
+          const existingPlateNumbers = data.map((item) => item.plateNumber);
+          resolve(!existingPlateNumbers.includes(plateNumber));
+        },
+        (error) => {
+          console.error('Error checking plate numbers:', error);
+          reject(error);
+        }
+      );
+    });
+  }
+
   // Save updated vehicle
   saveVehicle(updatedResource: Resource): void {
-    if (this.resourceId) {
-      this.resourceService
-        .updateResource(this.resourceId, updatedResource)
-        .subscribe(
+    const plateNumber = updatedResource.plateNumber ?? ''; // กำหนดค่าเริ่มต้นหาก plateNumber เป็น undefined
+  
+    // ตรวจสอบว่า plateNumber ไม่ว่างเปล่า
+    if (!plateNumber.trim()) {
+      alert('Plate number is required. Please fill in the plate number.');
+      return;
+    }
+  
+    // ตรวจสอบรูปแบบของ plateNumber
+    if (!this.isPlateNumberValid(plateNumber)) {
+      alert('Invalid plate number format. Please use the format XX-1234.');
+      return;
+    }
+  
+    // ตรวจสอบความซ้ำซ้อนของ plateNumber
+    this.isPlateNumberUnique(plateNumber).then((isUnique) => {
+      if (!isUnique) {
+        alert('Plate number already exists. Please use a unique plate number.');
+        return;
+      }
+  
+      // หากผ่านการตรวจสอบทั้งหมด ให้ทำการบันทึกข้อมูล
+      if (this.resourceId) {
+        this.resourceService.updateResource(this.resourceId, updatedResource).subscribe(
           (response) => {
             console.log('Saving changes...');
             this.router.navigate(['/resource'], {
@@ -138,11 +181,41 @@ export class VehicleEditComponent implements OnInit {
             alert('Failed to update resource. Please try again.');
           }
         );
+      }
+    });
+  }
+  deleteResource(): void {
+    if (this.resourceId) {
+      const confirmDelete = confirm(
+        `Are you sure you want to delete the resource "${this.resource.name}"?`
+      );
+      if (confirmDelete) {
+        this.resourceService.deleteResource(this.resourceId).subscribe(
+          () => {
+            alert('Resource deleted successfully!');
+            this.router.navigate(['/resource'], {
+              queryParams: { type: this.selectedType }, // ส่งค่าประเภทกลับ
+            });
+          },
+          (error) => {
+            console.error('Error deleting resource:', error);
+            alert('Failed to delete resource. Please try again.');
+          }
+        );
+      }
+    } else {
+      alert('Resource ID not found.');
     }
   }
 
   // Navigate back to resource list
   goBack(): void {
-    this.router.navigate(['/resource'], { queryParams: { type: 'Vehicles' } });
+    this.router.navigate(['/resource'], {
+      queryParams: { type: this.selectedType }, 
+    });
+  }
+
+  getStatusClass(status: string | undefined): string {
+    return status === 'Available' ? 'status-available' : 'status-maintenance';
   }
 }

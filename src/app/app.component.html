@@ -9,12 +9,20 @@
         </button>
       </li>
       <li>
-        <button [routerLink]="['/resource']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
+        <button
+          [routerLink]="['/resource']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: false }"
+        >
           <img src="resources-icon.png" /> Resource
         </button>
       </li>
       <li>
-        <button [routerLink]="['/booking']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
+        <button
+          [routerLink]="['/booking']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: false }"
+        >
           <img src="bookings-icon.png" /> Bookings
         </button>
       </li>
@@ -30,12 +38,21 @@
   <div class="header">
     <button class="hamburger" (click)="toggleSidebar()">&#9776;</button>
     <div class="actions">
-      <button class="btn-new">
+      <button class="btn-new" (click)="toggleModal()">
         <i class="fa fa-plus"></i>
       </button>
+      <!-- Dropdown Modal -->
+      <div class="dropdown-menu" *ngIf="isModalOpen">
+        <button [routerLink]="['resource/vehicles/add']" class="modal-button-v" (click)="toggleModal()">Add Vehicles</button>
+        <button [routerLink]="['resource/equipment/add']" class="modal-button-e" (click)="toggleModal()">Add Equipment</button>
+        <button [routerLink]="['resource/staff/add']" class="modal-button-s" (click)="toggleModal()">Add Staff</button>
+        <button [routerLink]="['booking/add']" class="modal-button" (click)="toggleModal()">Add Booking</button>      </div>
     </div>
   </div>
 
+
+
+  
   <!-- Main Content -->
   <div class="content" [class.margin-left]="isSidebarOpen">
     <router-outlet></router-outlet>

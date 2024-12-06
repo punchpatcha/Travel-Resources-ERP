@@ -103,10 +103,7 @@
   .header input::placeholder {
     color: #dddd;
   }
-  .header .actions {
-    display: flex;
-    align-items: center;
-  }
+
 
   .btn-new {
     background-color: #0F80F6;
@@ -133,6 +130,87 @@
   .hamburger {
     display: none; /* Show hamburger on mobile */
   }
+
+  .header .actions {
+    display: flex;
+    align-items: center;
+    margin-left: auto; /* ทำให้ actions อยู่ด้านขวาสุด */
+    position: relative; /* ให้ตำแหน่งของ dropdown อยู่ใน container นี้ */
+  }
+  
+  
+  .dropdown-menu {
+    position: absolute;
+    top: 100%; /* เลื่อนตำแหน่งลงไปใต้ปุ่ม */
+    right: 0; /* ตั้งให้ตรงกับขอบซ้ายของปุ่ม */
+    margin-top: 10px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    padding: 10px;
+    z-index: 1000;
+    width: 200px; /* ปรับขนาดได้ตามต้องการ */
+  }
+  
+
+/* ปรับแต่งปุ่มใน modal */
+.modal-button {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin: 4px 0;
+  background-color: #0057b4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.modal-button-v {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin: 4px 0;
+  background-color: #65b0ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.modal-button-e {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin: 4px 0;
+  background-color: #268fff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.modal-button-s {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin: 4px 0;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+}
+
+
+.modal-button:hover {
+  background-color: #0056b3;
+}
+
   /* For smaller screens (mobile view) */
   @media only screen and (max-width: 768px) {
     .sidebar {

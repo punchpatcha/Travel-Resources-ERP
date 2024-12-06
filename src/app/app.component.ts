@@ -1,18 +1,19 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule, HttpClientModule],
+  imports: [RouterModule, HttpClientModule,CommonModule],
   templateUrl: './app.component.html', 
   styleUrls: ['./app.component.css'] 
   
 })
 export class AppComponent {
   isSidebarOpen = false;
-
+  isModalOpen = false;
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
   }
@@ -23,5 +24,10 @@ export class AppComponent {
     if (!target.closest('.sidebar') && !target.closest('.hamburger')) {
       this.isSidebarOpen = false;
     }
+  }
+
+
+  toggleModal() {
+    this.isModalOpen = !this.isModalOpen;
   }
 }

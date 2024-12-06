@@ -2,12 +2,12 @@
   <!-- Header -->
   <div class="header">
     <div class="back-button" (click)="goBack()">
-      <i class="fa-solid fa-arrow-left"></i> 
+      <i class="fa-solid fa-arrow-left"></i>
     </div>
     <h2 class="title">New Item</h2>
     <div class="actions">
-      <button class="btn save" (click)="onSubmit()">Save</button>
-      <button class="btn delete">Delete</button>
+      <button class="btn save" (click)="saveVehicle()">Save</button>
+      
     </div>
   </div>
   <hr />
@@ -15,52 +15,61 @@
   <!-- Content Section -->
   <div class="content">
     <!-- Left Column: Form Section -->
-    <form (ngSubmit)="onSubmit()" #vehicleForm="ngForm" class="form-section">
+    <form class="form-section">
       <div class="form-group">
         <label for="name">Name<span class="required">*</span></label>
-        <input type="text" id="name" [(ngModel)]="vehicles.name" name="name" required />
+        <input type="text" id="name" [(ngModel)]="vehicle.name" name="name" required />
       </div>
       <div class="form-group">
         <label for="category">Category<span class="required">*</span></label>
-        <select id="category" [(ngModel)]="vehicles.category" name="category" required (change)="onCategoryChange()">
-          <option value="">Select a category</option>
-          <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
-          <option value="add-new">Add New Category</option>
+        <select
+        id="category"
+        name="category"
+        required
+          [(ngModel)]="vehicle.category"
+          (change)="onCategoryChange()"
+        >
+          <option *ngFor="let category of categories" [value]="category">
+            {{ category }}
+          </option>
         </select>
       </div>
-      
-      <!-- Modal for adding new category -->
-      <div *ngIf="showModal" class="modal-overlay">
-        <div class="modal">
-          <div class="modal-header">
-            <h3>Add New Category</h3>
-            <button type="button" class="close-button" (click)="closeModal()">X</button>
-          </div>
-          <div class="modal-body">
-            <input type="text" id="newCategory" [(ngModel)]="newCategory" placeholder="Enter category name" />
-            <button type="button" (click)="addNewCategory()">Add Category</button>
-          </div>
-        </div>
+
+      <div class="modal-overlay" *ngIf="showModal"></div>
+      <!-- Modal -->
+      <div *ngIf="showModal" class="modal">
+        <h3>Add New Category</h3>
+        <input
+          type="text"
+          [(ngModel)]="newCategory"
+          name="newCategory"
+          placeholder="Enter new category"
+        />
+
+        <button class="Addmodal" (click)="addNewCategory()">Save</button>
+        <button class="Cancelmodal" (click)="closeModal()">Cancel</button>
       </div>
 
+      <!-- Retain the plateNumber and capacity sections as is -->
       <div class="form-group">
         <label for="plateNumber">Plate Number<span class="required">*</span></label>
-        <input type="text" id="plateNumber" [(ngModel)]="vehicles.plateNumber" name="plateNumber" required />
+        <input type="text" id="plateNumber" [(ngModel)]="vehicle.plateNumber" name="plateNumber" required />
       </div>
       <div class="form-group">
         <label for="capacity">Capacity<span class="required">*</span></label>
-        <input type="number" id="capacity" [(ngModel)]="vehicles.capacity" name="capacity" required />
+        <input type="number" id="capacity" [(ngModel)]="vehicle.capacity" name="capacity" required />
       </div>
       <div class="form-group">
         <label for="status">Status<span class="required">*</span></label>
-        <select id="status" [(ngModel)]="vehicles.status" name="status" required>
+        <select id="status" [(ngModel)]="vehicle.status" name="status" required>
           <option value="Available">Available</option>
+          <option value="Booked">ฺBooked</option>
           <option value="Maintenance">Maintenance</option>
         </select>
       </div>
       <div class="form-group">
         <label for="maintenanceDate">Maintenance Date</label>
-        <input type="date" id="maintenanceDate" [(ngModel)]="vehicles.maintenanceDate" name="maintenanceDate" />
+        <input type="date" id="maintenanceDate" [(ngModel)]="vehicle.maintenanceDate" name="maintenanceDate" />
       </div>
     </form>
 
@@ -84,48 +93,39 @@
           accept="image/*"
           hidden
         />
-          <!-- ถ้าผู้ใช้เลือกภาพแล้ว แสดงปุ่มถังขยะ -->
-  <div *ngIf="previewImage" class="trash-container" (click)="removeImage()">
-    <img class="trash-icon" src="upload-icon.png" alt="Delete Image" />
-  </div>
+        <!-- ถ้าผู้ใช้เลือกภาพแล้ว แสดงปุ่มถังขยะ -->
+        <div *ngIf="previewImage" class="trash-container" (click)="removeImage()">
+          <img class="trash-icon" src="upload-icon.png" alt="Delete Image" />
+        </div>
       </div>
 
-      <!-- Form Data Container จะถูกแสดงเมื่อกรอกครบ -->
+      <!-- Form Data Container will show when form is valid -->
       <div class="form-data-container" *ngIf="isFormValid()">
-        <h3>{{ vehicles.name }}</h3>
+        <h3>{{ vehicle.name }}</h3>
         <ul>
           <li>
             <strong>Category</strong>
-            <span>{{ vehicles.category }}</span>
+            <span>{{ vehicle.category }}</span>
           </li>
           <li>
             <strong>Plate Number</strong>
-            <span>{{ vehicles.plateNumber }}</span>
+            <span>{{ vehicle.plateNumber }}</span>
           </li>
           <li>
             <strong>Capacity</strong>
-            <span>{{ vehicles.capacity }}</span>
+            <span>{{ vehicle.capacity }}</span>
           </li>
           <li>
             <strong>Status</strong>
-            <span [ngClass]="getStatusClass(vehicles.status)">
-              {{ vehicles.status }}
+            <span [ngClass]="getStatusClass(vehicle.status)">
+              {{ vehicle.status }}
             </span>
           </li>
           <li>
             <strong>Maintenance Date</strong>
-            <span>{{ vehicles.maintenanceDate }}</span>
+            <span>{{ vehicle.maintenanceDate }}</span>
           </li>
         </ul>
-
-        <div *ngIf="previewImage">
-          <h4>Uploaded Image:</h4>
-          <img
-            [src]="previewImage"
-            alt="Uploaded Image"
-            style="max-width: 100%; height: auto; border-radius: 4px;"
-          />
-        </div>
       </div>
     </div>
   </div>

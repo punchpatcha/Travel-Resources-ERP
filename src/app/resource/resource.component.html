@@ -1,12 +1,11 @@
-<div class="table-container">
-  <div class="table-container-header">
-    <select [(ngModel)]="selectedView" class="dropdown">
-      <option value="vehicles">Vehicles</option>
-      <option value="equipment">Equipment</option>
-      <option value="staff">Staff</option>
-    </select>
-    <button class="btn-new" (click)="navigateToAddResource()">+ New</button>
-  </div>
+<div class="table-container-header">
+  <select [(ngModel)]="selectedView" class="dropdown">
+    <option value="vehicles">Vehicles</option>
+    <option value="equipment">Equipment</option>
+    <option value="staff">Staff</option>
+  </select>
+  <button class="btn-new" (click)="navigateToAddResource()">+ New</button>
+</div>
 
   <table>
     <thead>
@@ -80,9 +79,8 @@
     </tbody>
   </table>
 
-  <div class="pagination">
-    <button>&lt;</button>
-    <span>1 - 2</span>
-    <button>&gt;</button>
-  </div>
+<div class="pagination">
+<button>&lt;</button>
+<span>1 - 2</span>
+<button>&gt;</button>
 </div>

@@ -24,15 +24,16 @@ export class ResourceComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
-      console.log('Query params:', params); // ตรวจสอบค่าที่รับมา
       if (params['type']) {
         this.selectedView = params['type'];
-        
+      } else {
+        this.selectedView = 'vehicles'; // ตั้งค่าเริ่มต้น
       }
     });
-
+  
     this.loadResources();
   }
+  
 
   // โหลดข้อมูลจาก API
   loadResources(): void {
@@ -87,24 +88,26 @@ export class ResourceComponent implements OnInit {
     }
   }
 
-  // สำหรับ edit แต่ละประเภท
-  navigateToEditResource(resourceId: string) {
-    this.router.navigate(['resource/edit-equipment/', resourceId]);
+  updateQueryParams() {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { type: this.selectedView },
+      queryParamsHandling: 'merge', // รวม queryParams เดิม
+    });
   }
 
+  
+  // สำหรับ edit แต่ละประเภท
   navigateToAddResource() {
-    if (this.selectedView === 'vehicles') {
-      this.router.navigate(['resource/vehicles/add'], {
-        queryParams: { type: 'vehicles' },
-      });
-    } else if (this.selectedView === 'equipment') {
-      this.router.navigate(['resource/equipment/add'], {
-        queryParams: { type: 'equipment' },
-      });
-    } else if (this.selectedView == 'staff') {
-      this.router.navigate(['resource/staff/add'], {
-        queryParams: { type: 'staff' },
-      });
-    }
+    this.router.navigate([`resource/${this.selectedView}/add`], {
+      queryParams: { type: this.selectedView },
+    });
   }
-}
+  
+  navigateToEditResource(resourceId: string) {
+    this.router.navigate([`resource/edit-equipment/${resourceId}`], {
+      queryParams: { type: this.selectedView }, // ส่งประเภทที่เลือกไปด้วย
+    });
+  }
+  
+  }

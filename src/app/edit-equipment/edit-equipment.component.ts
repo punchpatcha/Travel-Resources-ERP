@@ -24,6 +24,7 @@ export class EditEquipmentComponent implements OnInit {
   showModal: boolean = false;
   newCategory: string = '';
   categories: string[] = [];
+  selectedType: string = 'equipment'; // ค่าเริ่มต้น
   constructor(
     private resourceService: ResourceService,
     private route: ActivatedRoute,
@@ -42,10 +43,15 @@ export class EditEquipmentComponent implements OnInit {
           } else {
             this.previewImage = null;
           }
-          
         }
       });
     }
+    // ดึงค่า type จาก queryParams
+    this.route.queryParams.subscribe((params) => {
+      if (params['type']) {
+        this.selectedType = params['type'];
+      }
+    });
     this.loadCategories(); // ดึงหมวดหมู่จากฐานข้อมูลเมื่อเริ่มต้นคอมโพเนนต์
   }
 
@@ -69,34 +75,41 @@ export class EditEquipmentComponent implements OnInit {
   saveChanges(updatedResource: Resource): void {
     if (this.resourceId) {
       // ตรวจสอบให้แน่ใจว่า availableUnits มีค่าก่อนการคำนวณ
-      if (updatedResource.totalUnits !== undefined && this.resource.totalUnits !== undefined) {
+      if (
+        updatedResource.totalUnits !== undefined &&
+        this.resource.totalUnits !== undefined
+      ) {
         // คำนวณ availableUnits ใหม่หาก totalUnits เปลี่ยนแปลง
-        const difference = updatedResource.totalUnits - this.resource.totalUnits;
-        updatedResource.availableUnits = (this.resource.availableUnits ?? 0) + difference; // ใช้ ?? เพื่อกำหนดค่าเริ่มต้นเป็น 0 หาก undefined
+        const difference =
+          updatedResource.totalUnits - this.resource.totalUnits;
+        updatedResource.availableUnits =
+          (this.resource.availableUnits ?? 0) + difference; // ใช้ ?? เพื่อกำหนดค่าเริ่มต้นเป็น 0 หาก undefined
       }
-  
-      this.resourceService.updateResource(this.resourceId, updatedResource).subscribe(
-        (response) => {
-          console.log('Resource updated successfully:', response);
-          alert('Resource updated successfully!');
-          this.router.navigate(['/resource'], {
-            queryParams: { type: 'equipment' },
-          });
-        },
-        (error) => {
-          console.error('Error updating resource:', error);
-          alert('Failed to update resource. Please try again.');
-        }
-      );
+
+      this.resourceService
+        .updateResource(this.resourceId, updatedResource)
+        .subscribe(
+          (response) => {
+            console.log('Resource updated successfully:', response);
+            alert('Resource updated successfully!');
+            console.log('Saving changes...');
+            this.router.navigate(['/resource'], {
+              queryParams: { type: this.selectedType }, // ส่งค่าประเภทกลับ
+            });
+          },
+          (error) => {
+            console.error('Error updating resource:', error);
+            alert('Failed to update resource. Please try again.');
+          }
+        );
     }
   }
-  
+
   goBack() {
     this.router.navigate(['/resource'], {
-      queryParams: { type: 'equipment' },
+      queryParams: { type: this.selectedType }, // ส่งค่าประเภทกลับ
     });
-}
-  
+  }
 
   // ฟังก์ชันสำหรับตรวจสอบการเปลี่ยนแปลงหมวดหมู่
   onCategoryChange() {
@@ -121,7 +134,6 @@ export class EditEquipmentComponent implements OnInit {
       reader.readAsDataURL(file);
     }
   }
-  
 
   onBrowseImage(): void {
     document.getElementById('imageUpload')?.click();

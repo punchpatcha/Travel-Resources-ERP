@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ResourceService, Resource } from '../services/resource.service';
 
@@ -32,10 +32,12 @@ export class AddVehiclesComponent implements OnInit {
   showModal = false;
   // ตัวแปรสำหรับแสดงตัวอย่างภาพ
   previewImage: string | null = null;
+  selectedType: string = 'vehicles'; // ค่าเริ่มต้น
 
   constructor(
     private resourceService: ResourceService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -47,14 +49,18 @@ export class AddVehiclesComponent implements OnInit {
     this.resourceService.getAvailableResources({ type: 'Vehicles' }).subscribe(
       (data) => {
         // กรองข้อมูลที่ type เป็น 'Vehicles' เท่านั้น
-        const vehicleCategories = data.filter(item => item.type === 'Vehicles');
-  
+        const vehicleCategories = data.filter(
+          (item) => item.type === 'Vehicles'
+        );
+
         // ดึงค่า category ที่ไม่ซ้ำกัน
-        const uniqueCategories = Array.from(new Set(vehicleCategories.map(item => item.category)));
-  
+        const uniqueCategories = Array.from(
+          new Set(vehicleCategories.map((item) => item.category))
+        );
+
         // กำหนดให้ categories เป็น uniqueCategories
         this.categories = uniqueCategories;
-  
+
         // เพิ่มตัวเลือก "Add new category" ถ้ายังไม่มี
         if (!this.categories.includes('Add new category')) {
           this.categories.push('Add new category');
@@ -83,11 +89,11 @@ export class AddVehiclesComponent implements OnInit {
     }
   }
 
-     // ฟังก์ชันสำหรับตรวจสอบการเปลี่ยนแปลงสถานะของอุปกรณ์
-     onStatusChange(status: string) {
-      console.log('Status changed to:', status);
-      this.vehicle.status = status;
-    }
+  // ฟังก์ชันสำหรับตรวจสอบการเปลี่ยนแปลงสถานะของอุปกรณ์
+  onStatusChange(status: string) {
+    console.log('Status changed to:', status);
+    this.vehicle.status = status;
+  }
 
   closeModal() {
     this.showModal = false;
@@ -167,7 +173,6 @@ export class AddVehiclesComponent implements OnInit {
 
   // ฟังก์ชันสำหรับกำหนดคลาส CSS ตามสถานะ แต้งสี
   getStatusClass(status?: string): string {
-
     if (!status) {
       return 'status-default'; // ค่าเริ่มต้นเมื่อไม่มีค่า `status`
     }
@@ -180,7 +185,6 @@ export class AddVehiclesComponent implements OnInit {
         return 'status-default';
     }
   }
-
 
   // Validate form fields
   isFormValid(): boolean {
@@ -200,12 +204,14 @@ export class AddVehiclesComponent implements OnInit {
         alert('Invalid plate number. It must follow the format: AB-1234.');
         return;
       }
-  
+
       if (!this.isPlateNumberUnique(this.vehicle.plateNumber || '')) {
-        alert('Plate number already exists. Please enter a unique plate number.');
+        alert(
+          'Plate number already exists. Please enter a unique plate number.'
+        );
         return;
       }
-  
+
       // Ensure valid maintenanceDate and type
       if (!this.vehicle.maintenanceDate) {
         this.vehicle.maintenanceDate = new Date().toISOString(); // Use the current date if undefined
@@ -213,13 +219,15 @@ export class AddVehiclesComponent implements OnInit {
       if (this.vehicle.type !== 'Vehicles') {
         this.vehicle.type = 'Vehicles'; // Match backend enum value
       }
-  
+
       console.log('Vehicle data being sent:', this.vehicle); // Debug log
-  
+
       this.resourceService.createResource(this.vehicle as Resource).subscribe(
         (response) => {
           console.log('Vehicle added successfully:', response);
-          this.router.navigate(['/resource'], { queryParams: { type: 'vehicle' } });
+          this.router.navigate(['/resource'], {
+            queryParams: { type: this.selectedType }, // ส่งค่าประเภทกลับ
+          });
         },
         (error) => {
           console.error('Error adding vehicle:', error);
@@ -234,6 +242,8 @@ export class AddVehiclesComponent implements OnInit {
   }
   // Navigate back
   goBack() {
-    this.router.navigate(['/resource'], { queryParams: { type: 'vehicle' } });
+    this.router.navigate(['/resource'], {
+      queryParams: { type: this.selectedType }, // ส่งค่าประเภทกลับ
+    });
   }
 }

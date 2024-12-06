@@ -182,6 +182,7 @@
                 [checked]="isSelected(item)"              />
             </td>
             <td *ngFor="let field of tableFields">
+              <!-- กรณี field เป็น status -->
               <span *ngIf="field === 'status'">
                 <span
                   [ngClass]="{
@@ -191,13 +192,18 @@
                   {{ item[field] }}
                 </span>
               </span>
-              <span *ngIf="field === 'lastUsed'">
+            
+              <!-- กรณี field เป็น lastUsed หรือ lastAssignment -->
+              <span *ngIf="field === 'lastUsed' || field === 'lastAssignment'">
                 {{ item[field] ? (item[field] | date : "dd/MM/yyyy") : "-" }}
               </span>
-              <span *ngIf="field !== 'status' && field !== 'lastUsed'">
-                {{ item[field] }}
+            
+              <!-- กรณีอื่นๆ -->
+              <span *ngIf="field !== 'status' && field !== 'lastUsed' && field !== 'lastAssignment'">
+                {{ item[field] || '-' }}
               </span>
             </td>
+            
           </tr>
         </tbody>
       </table>

@@ -40,6 +40,7 @@ export class AddBookingComponent implements OnInit {
     name: string;
     category: string;
     quantity: number;
+    role: string
   }[] = [];
 
   constructor(
@@ -185,6 +186,7 @@ export class AddBookingComponent implements OnInit {
           name: item.name,
           category: item.category,
           quantity: 1, // ค่าเริ่มต้นของจำนวน
+          role: item.role
         });
       }
     } else {
@@ -199,12 +201,18 @@ export class AddBookingComponent implements OnInit {
 
   // ฟังก์ชันช่วยในการอัพเดท selectedDetails จาก selectedChecklist
   updateSelectedDetails() {
-    const categories = new Set<string>();
+    const details = new Set<string>();
     this.selectedChecklist.forEach((item) => {
-      categories.add(item.category);
+      if (item.category) {
+        details.add(item.category); // เพิ่ม category
+      }
+      if (item.role) {
+        details.add(item.role); // เพิ่ม role
+      }
     });
-    this.selectedDetails = Array.from(categories);
+    this.selectedDetails = Array.from(details);
   }
+  
 
   goBack(): void {
     this.location.back();

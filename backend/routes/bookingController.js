@@ -113,45 +113,21 @@ exports.updateBooking = async (req, res) => {
           throw new Error(`Resource ${item._id} not found for reverting`);
         }
 
-        if (resource) {
+       // อัปเดตสถานะและฟิลด์ที่เกี่ยวข้อง
+       resource.status = "Available";
+       if (resource.type === "Equipment" || resource.type === "Vehicles") {
+         resource.lastUsed = new Date(); // บันทึกวันที่ปัจจุบัน
+       } else if (resource.type === "Staff") {
+         resource.lastAssignment = new Date().toISOString(); // บันทึกวันที่ปัจจุบันในรูปแบบ ISO
+       }
 
-          resource.status = "Available";
-          console.log(
-            `Reverted resource: ${resource.name}}`
-          );
-          const updatedResource = await resource.save({ session });
+       console.log(`Updated resource: ${resource.name}, type: ${resource.type}`);
+       await resource.save({ session });
+     }
+   }
 
-          // ตรวจสอบว่าการบันทึกสำเร็จหรือไม่
-          if (!updatedResource) {
-            throw new Error(
-              `Failed to update resource ${resource.name} status to Available`
-            );
-          }
-        }
-      }
-    }
-
-    // สำหรับกรณีที่ไม่ใช่ Returned, ทำการอัปเดตสถานะทรัพยากรเป็น Booked
-    if (status !== "Returned") {
-      for (let item of originalDetails) {
-        const resource = await Resource.findOne({ _id: item._id }).session(
-          session
-        );
-        console.log(
-          `Updated status for resource: ${resource.name}, status: ${resource.status}`
-        );
-
-        if (!resource) {
-          throw new Error(`Resource ${item._id} not found`);
-        }
-
-        resource.status = "Available";
-        console.log(
-          `Reverted resource: ${resource.name}}`
-        );
-        await resource.save({ session });
-      }
-
+     // สำหรับกรณีที่ไม่ใช่ Returned, อัปเดตสถานะเป็น Booked
+     if (status !== "Returned") {
       for (let item of JSON.parse(details || "[]")) {
         const resource = await Resource.findOne({ _id: item._id }).session(
           session
@@ -159,15 +135,10 @@ exports.updateBooking = async (req, res) => {
         if (!resource) {
           throw new Error(`Resource ${item._id} not found`);
         }
-        if (resource) {
-          resource.status = "Booked";
-          console.log(`Updated status for resource: ${resource.name}`);
-          await resource.save({ session });
-        } else {
-          throw new Error(
-            `Insufficient units available for resource ${item.name}`
-          );
-        }
+
+        resource.status = "Booked";
+        console.log(`Updated status for resource: ${resource.name}`);
+        await resource.save({ session });
       }
     }
 

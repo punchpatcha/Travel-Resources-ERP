@@ -41,6 +41,7 @@ export class BookingEditComponent implements OnInit {
     name: string;
     category: string;
     quantity: number;
+    role:string
   }[] = [];
 
   constructor(
@@ -85,15 +86,23 @@ export class BookingEditComponent implements OnInit {
       (data) => {
         this.bookingData = data;
         this.selectedChecklist = JSON.parse(this.bookingData.details) || [];
-        this.selectedDetails = this.selectedChecklist.map(
-          (item) => item.category
-        );
+        
+        // รวม category และ role เข้าด้วยกัน
+        const combinedDetails = Array.from(new Set(this.selectedChecklist.flatMap((item) => {
+          const details = [];
+          if (item.category) details.push(item.category); // เพิ่ม category ถ้ามี
+          if (item.role) details.push(item.role); // เพิ่ม role ถ้ามี
+          return details;
+        })));
+  
+        this.selectedDetails = combinedDetails; // เก็บข้อมูลรวมใน selectedDetails
       },
       (error) => {
         console.error('Error loading booking:', error);
       }
     );
   }
+  
 
   openDetailsModal() {
     this.isModalOpen = true;
@@ -228,6 +237,7 @@ export class BookingEditComponent implements OnInit {
           name: item.name,
           category: item.type,
           quantity: 1,
+          role: item.role,
         });
       } else {
         existingItem.quantity++;

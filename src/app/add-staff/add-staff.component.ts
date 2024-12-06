@@ -14,18 +14,21 @@ import { ResourceService, Resource } from '../services/resource.service';
 export class AddStaffComponent implements OnInit {
   // Staff data
   staff: Partial<Resource> = {
+    type: 'Staff', 
     name: '',
     role: '',
-    contactNumber: '',
-    status: 'Active',
+    contact: '',
+    status: 'Available',
+    lastAssignment:'',
     image: '',
   };
 
   // List of available roles
-  roles: string[] = ['Tour Guide', 'Driver', 'Photographer', 'Technician'];
+  roles: string[] = [];
   newRole = '';
   showModal = false;
   previewImage: string | null = null;
+  selectedType: string = 'staff'; // ค่าเริ่มต้น
 
   constructor(
     private resourceService: ResourceService,
@@ -139,7 +142,7 @@ export class AddStaffComponent implements OnInit {
     return !!(
       this.staff.name &&
       this.staff.role &&
-      this.staff.contactNumber &&
+      this.staff.contact&&
       this.staff.status
     ) as boolean;
   }
@@ -161,13 +164,18 @@ export class AddStaffComponent implements OnInit {
   // Save staff
   saveStaff() {
     if (this.isFormValid()) {
+      // ตรวจสอบว่า type เป็น 'Staff' แล้วไม่ต้องใส่ category
+      if (this.staff.type === 'Staff') {
+        this.staff.category = ''; // หรือกำหนดค่าอื่น ๆ ที่เหมาะสม เช่น null หรือ 'N/A'
+      }
+  
       console.log('Staff data being sent:', this.staff); // Debug log
-
+  
       this.resourceService.createResource(this.staff as Resource).subscribe(
         (response) => {
           console.log('Staff added successfully:', response);
           this.router.navigate(['/resource'], {
-            queryParams: { type: 'Staff' },
+            queryParams: { type: this.selectedType }, // ส่งค่าประเภทกลับ
           });
         },
         (error) => {
@@ -181,11 +189,11 @@ export class AddStaffComponent implements OnInit {
       alert('Please fill in all required fields.');
     }
   }
-
-  // Navigate back
+    // Navigate back
   goBack() {
     this.router.navigate(['/resource'], {
-      queryParams: { type: 'Staff' },
+      queryParams: { type: this.selectedType }, // ส่งค่าประเภทกลับ
     });
   }
+
 }

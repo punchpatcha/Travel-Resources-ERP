@@ -13,9 +13,9 @@ export interface Resource {
   plateNumber?: string;
   capacity?: number;
   role?: string;
-  contactNumber?: string;
+  contact?: string;
   lastUsed?: Date;
-  lastAssignment?: Date;
+  lastAssignment?: string;
   maintenanceDate?: string;
   image?: string | null; // เพิ่ม `null` เพื่อรองรับ
 }

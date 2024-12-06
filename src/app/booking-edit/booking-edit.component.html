@@ -10,17 +10,11 @@
     </div>
     <h2>{{ bookingData.bookingId }}</h2>
     <div class="actions">
-      <button class="btn blue" (click)="saveBooking()" 
-      [disabled]="!isEditable">
+      <button class="btn blue" (click)="saveBooking()" [disabled]="!isEditable">
         Save
       </button>
 
-      <button
-        class="btn gray"
-        (click)="deleteBooking()"
-      >
-        Delete
-      </button>
+      <button class="btn gray" (click)="deleteBooking()">Delete</button>
     </div>
   </div>
   <hr />

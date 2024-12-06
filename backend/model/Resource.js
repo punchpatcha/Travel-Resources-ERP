@@ -16,7 +16,9 @@ const ResourceSchema = new mongoose.Schema(
     },
     category: {
       type: String, // เก็บชื่อ category แบบไดนามิก เช่น "Car", "Van", "Bus"
-      required: true,
+      required: function () {
+        return this.type === "Vehicles" || this.type === "Equipment";
+      },
     },
     status: {
       type: String,
@@ -45,7 +47,7 @@ const ResourceSchema = new mongoose.Schema(
     maintenanceDate: {
       type: Date, // วันที่กำหนดบำรุงรักษา
     },
-    // เฉพาะ Equipment
+  
   
     // เฉพาะ Staff
     role: {
@@ -62,9 +64,6 @@ const ResourceSchema = new mongoose.Schema(
     },
     lastAssignment: {
       type: Date,
-      required: function () {
-        return this.type === "Staff";
-      },
     },
     image: {
       type: String,

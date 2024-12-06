@@ -13,7 +13,7 @@ export interface Resource {
   plateNumber?: string;
   capacity?: number;
   role?: string;
-  contact?: string;
+  contactNumber?: string;
   lastUsed?: Date;
   lastAssignment?: Date;
   maintenanceDate?: string;

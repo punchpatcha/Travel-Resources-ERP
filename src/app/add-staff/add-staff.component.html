@@ -1,1 +1,117 @@
-<p>add-staff works!</p>
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <div class="back-button" (click)="goBack()">
+      <i class="fa-solid fa-arrow-left"></i>
+    </div>
+    <h2 class="title">Add Staff</h2>
+    <div class="actions">
+      <button class="btn save" (click)="saveStaff()">Save</button>
+    </div>
+  </div>
+  <hr />
+
+  <!-- Content Section -->
+  <div class="content">
+    <!-- Left Column: Form Section -->
+    <form class="form-section">
+      <div class="form-group">
+        <label for="name">Name<span class="required">*</span></label>
+        <input type="text" id="name" [(ngModel)]="staff.name" name="name" required />
+      </div>
+      <div class="form-group">
+        <label for="role">Role<span class="required">*</span></label>
+        <select
+          id="role"
+          name="role"
+          required
+          [(ngModel)]="staff.role"
+          (change)="onRoleChange()"
+        >
+          <option *ngFor="let role of roles" [value]="role">
+            {{ role }}
+          </option>
+        </select>
+      </div>
+
+      <div class="modal-overlay" *ngIf="showModal"></div>
+      <!-- Modal -->
+      <div *ngIf="showModal" class="modal">
+        <h3>Add New Role</h3>
+        <input
+          type="text"
+          [(ngModel)]="newRole"
+          name="newRole"
+          placeholder="Enter new role"
+        />
+        <button class="Addmodal" (click)="addNewRole()">Save</button>
+        <button class="Cancelmodal" (click)="closeModal()">Cancel</button>
+      </div>
+
+      <div class="form-group">
+        <label for="contactNumber">Contact Number<span class="required">*</span></label>
+        <input
+          type="text"
+          id="contactNumber"
+          [(ngModel)]="staff.contactNumber"
+          name="contactNumber"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="status">Status<span class="required">*</span></label>
+        <select id="status" [(ngModel)]="staff.status" name="status" required>
+          <option value="Available">Available</option>
+          <option value="Unavailable">Unavailable</option>
+        </select>
+      </div>
+    </form>
+
+    <!-- Right Column: Image & Form Data -->
+    <div class="right-column">
+      <div class="image-section">
+        <div class="image-placeholder" (click)="onBrowseImage()">
+          <!-- Show selected image -->
+          <img *ngIf="previewImage" [src]="previewImage" alt="Selected Image" />
+          <!-- Placeholder when no image is selected -->
+          <div *ngIf="!previewImage" class="browse-container">
+            <span class="browse-text">Browse image</span>
+            <img class="upload-icon" src="upload-icon.png" alt="Upload Icon" />
+          </div>
+        </div>
+        <!-- Hidden file input for selecting an image -->
+        <input
+          type="file"
+          id="imageUpload"
+          (change)="onImageSelected($event)"
+          accept="image/*"
+          hidden
+        />
+        <!-- Trash icon to remove selected image -->
+        <div *ngIf="previewImage" class="trash-container" (click)="removeImage()">
+          <img class="trash-icon" src="upload-icon.png" alt="Delete Image" />
+        </div>
+      </div>
+
+      <!-- Form Data Container will show when form is valid -->
+      <div class="form-data-container">
+        <h3>{{ staff.name }}</h3>
+        <ul>
+          <li>
+            <strong>Role</strong>
+            <span>{{ staff.role }}</span>
+          </li>
+          <li>
+            <strong>Contact Number</strong>
+            <span>{{ staff.contactNumber }}</span>
+          </li>
+          <li>
+            <strong>Status</strong>
+            <span [ngClass]="getStatusClass(staff.status || 'Unavailable')">{{ staff.status }}</span>
+
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

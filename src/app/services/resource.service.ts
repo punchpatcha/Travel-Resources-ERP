@@ -52,9 +52,9 @@ export class ResourceService {
   updateResource(id: string, updates: Partial<Resource>): Observable<Resource> {
     return this.http.put<Resource>(`${this.apiUrl}/${id}`, updates);
   }
-
-  deleteResource(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+  
+  deleteResource(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
 

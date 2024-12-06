@@ -111,6 +111,30 @@ export class EditEquipmentComponent implements OnInit {
     });
   }
 
+  deleteResource(): void {
+    if (this.resourceId) {
+      const confirmDelete = confirm(
+        `Are you sure you want to delete the resource "${this.resource.name}"?`
+      );
+      if (confirmDelete) {
+        this.resourceService.deleteResource(this.resourceId).subscribe(
+          () => {
+            alert('Resource deleted successfully!');
+            this.router.navigate(['/resource'], {
+              queryParams: { type: this.selectedType }, // ส่งค่าประเภทกลับ
+            });
+          },
+          (error) => {
+            console.error('Error deleting resource:', error);
+            alert('Failed to delete resource. Please try again.');
+          }
+        );
+      }
+    } else {
+      alert('Resource ID not found.');
+    }
+  }
+  
   // ฟังก์ชันสำหรับตรวจสอบการเปลี่ยนแปลงหมวดหมู่
   onCategoryChange() {
     if (this.resource.category === 'Add new category') {

@@ -1,0 +1,141 @@
+.dashboard {
+    padding: 20px;
+  }
+  
+  .header h1 {
+    text-align: center;
+  }
+  
+  .dashboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .add-button {
+    width: 40px;
+    height: 40px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  
+  .profile-circle {
+    width: 40px;
+    height: 40px;
+    background-color: #ccc;
+    border-radius: 50%;
+  }
+  
+  .main-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  
+  .card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .current-availability .availability-grid {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .availability-item {
+    text-align: center;
+  }
+  
+  .availability-item .number {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .inventory-summary .summary-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  
+  
+  .low-stock-alert {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .low-stock-alert .availability-item {
+    display: flex;
+    justify-content: space-between; /* Ensure the text is left and number is right */
+    width: 100%; /* Ensure the items take the full width of the container */
+    margin-bottom: 10px;
+  }
+  
+  .low-stock-alert .availability-item .label {
+    font-weight: normal;
+  }
+  
+  .low-stock-alert .availability-item .value {
+    font-weight: bold;
+  }
+  
+  .low-stock {
+    color: red;
+  }
+
+  .progress-circle {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: conic-gradient(#28a745 90%, #ddd 0%);
+  }
+  
+  .progress-circle .circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    font-weight: bold;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  table th {
+    background-color: #f4f4f4;
+  }
+  
+  

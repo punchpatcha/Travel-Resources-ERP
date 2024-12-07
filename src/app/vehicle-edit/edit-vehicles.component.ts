@@ -10,7 +10,7 @@ import { Resource, ResourceService } from '../services/resource.service';
   templateUrl: './edit-vehicles.component.html',
   styleUrls: ['./edit-vehicles.component.css'],
 })
-export class VehicleEditComponent implements OnInit {
+export class EditVehiclesComponent implements OnInit {
   resource: Resource = {
     _id: '',
     name: '',

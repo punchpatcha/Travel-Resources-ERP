@@ -1,9 +1,18 @@
 .dashboard {
     padding: 20px;
   }
-  
+
   .header h1 {
+    margin: 30px 0px;
+    color: #5b5b5b;
+    font-size: 16px;
+    font-weight: 500;
+    padding-left: 20px;
+  }
+  
+  .header h3 {
     text-align: center;
+    border-color: #000;
   }
   
   .dashboard-container {
@@ -18,34 +27,7 @@
     justify-content: space-between;
     align-items: center;
   }
-  
-  .actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .add-button {
-    width: 40px;
-    height: 40px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    font-size: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-  
-  .profile-circle {
-    width: 40px;
-    height: 40px;
-    background-color: #ccc;
-    border-radius: 50%;
-  }
-  
+
   .main-content {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -69,8 +51,18 @@
   }
   
   .availability-item .number {
-    font-size: 24px;
+    font-size: 48px;
     font-weight: bold;
+  }
+
+  .availability-item .text{
+    color: #5b5b5b;
+    font-size: 16px;
+  }
+
+.line {
+    border-right: 1px solid #ddd;
+
   }
   
   .inventory-summary .summary-content {
@@ -79,19 +71,26 @@
     align-items: center;
   }
 
+.low-stock-alert-grid{
+  display: flex;
+  gap: 10x;
+  flex-direction: column;
+}
   
-  
-  .low-stock-alert {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
   
   .low-stock-alert .availability-item {
     display: flex;
     justify-content: space-between; /* Ensure the text is left and number is right */
-    width: 100%; /* Ensure the items take the full width of the container */
+    width: 75%; /* Ensure the items take the full width of the container */
     margin-bottom: 10px;
+  }
+
+  .label{
+    color: #5B5B5B;
+  }
+
+  .value{
+    color: #000;
   }
   
   .low-stock-alert .availability-item .label {
@@ -106,12 +105,18 @@
     color: red;
   }
 
+  .low-stock-label {
+    color: red;
+    font-weight: bold;
+  }
+  
+
   .progress-circle {
     position: relative;
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: conic-gradient(#28a745 90%, #ddd 0%);
+    background: conic-gradient(#98ED9B 90%, #ddd 0%);
   }
   
   .progress-circle .circle {

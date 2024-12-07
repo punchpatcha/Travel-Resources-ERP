@@ -11,15 +11,21 @@
       <div class="availability-grid">
         <div class="availability-item">
           <div class="number">{{ totalVehicle }}</div>
-          <div>Total Vehicles</div>
+          <div class="text">Available Vehicles</div>
         </div>
+
+        <div class="line"></div>
+
         <div class="availability-item">
           <div class="number">{{ totalEquipment }}</div>
-          <div>Total Equipment</div>
+          <div class="text">Available Equipment</div>
         </div>
+
+        <div class="line"></div>
+
         <div class="availability-item">
           <div class="number">{{ totalStaff }}</div>
-          <div>Total Staff</div>
+          <div class="text">Available Staff</div>
         </div>
       </div>
     </div>
@@ -28,42 +34,39 @@
     <div class="card inventory-summary">
       <h3>Inventory Summary</h3>
       <div class="summary-content">
-        <div>
-          <p>Total Resources</p>
-          <h2>{{ totalVehicle + totalEquipment + totalStaff }}</h2>
+        <div class="content-column">
+          <div class="availability-item">
+            <span class="text">Total Resources</span>
+            <span class="total">{{ totalVehicle + totalEquipment + totalStaff }}</span>
+          </div>
+          <div class="availability-item">
+            <span class="text">Used Resources</span>
+            <span class="total">{{ lowStockVehicles + lowStockEquipment + lowStockStaff }}</span>
+          </div>
         </div>
-        <div>
-          <p>Used Resources</p>
-          <h2>{{ lowStockVehicles + lowStockEquipment + lowStockStaff }}</h2>
-        </div>
-        <div class="progress-circle">
-          <div class="circle">{{ activePercentage }}%</div>
-        </div>
+        <div class="circle">{{ activePercentage }}%</div>
       </div>
     </div>
 
     <!-- Low Stock Alert -->
     <div class="card low-stock-alert">
-    <div class="low-stock-alert">
       <h3>Low Stock Alert</h3>
-      <div class="availability-grid">
+      <div class="low-stock-alert-grid">
         <div *ngIf="lowStockVehicles > 0" class="availability-item">
-          <span class="label">Vehicles:</span>
+          <span class="label" [ngClass]="{'low-stock-label': lowStockVehicles <= 5}">Vehicles</span>
           <span class="value" [ngClass]="{'low-stock': lowStockVehicles <= 5}">{{ lowStockVehicles }}</span>
         </div>
         <div *ngIf="lowStockEquipment > 0" class="availability-item">
-          <span class="label">Equipment:</span>
+          <span class="label" [ngClass]="{'low-stock-label': lowStockEquipment <= 5}">Equipment</span>
           <span class="value" [ngClass]="{'low-stock': lowStockEquipment <= 5}">{{ lowStockEquipment }}</span>
         </div>
         <div *ngIf="lowStockStaff > 0" class="availability-item">
-          <span class="label">Staff:</span>
+          <span class="label" [ngClass]="{'low-stock-label': lowStockStaff <= 5}">Staff</span>
           <span class="value" [ngClass]="{'low-stock': lowStockStaff <= 5}">{{ lowStockStaff }}</span>
         </div>
       </div>
     </div>
-    </div>
 
-    <!-- Upcoming Bookings -->
     <div class="card">
       <h3>Upcoming Bookings</h3>
       <table>
@@ -77,13 +80,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let booking of bookings">
+          <tr *ngFor="let booking of recentActivities">
             <td>{{ booking.startDate | date }}</td>
-            <td>{{ booking.details }}</td>
+            <td>{{ booking.type }}</td>
+            <td>{{ booking.category }}</td>
             <td>{{ booking.customerName }}</td>
             <td>{{ booking.status }}</td>
-            <td>Pending</td>
-          </tr>
         </tbody>
       </table>
     </div>
@@ -102,15 +104,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let activity of recentActivities">
-            <td>{{ activity.date | date }}</td>
-            <td>{{ activity.type }}</td>
-            <td>{{ activity.details }}</td>
-            <td>{{ activity.bookedBy }}</td>
-            <td>{{ activity.action }}</td>
-          </tr>
+          <tr *ngFor="let booking of combinedBookings">
+            <td>{{ booking.startDate | date }}</td>
+            <td>{{ booking.type }}</td>
+            <td>{{ booking.category }}</td>
+            <td>{{ booking.customerName }}</td>
+            <td>{{ booking.status }}</td>
         </tbody>
       </table>
     </div>
-  </div>
-</div>

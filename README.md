@@ -64,13 +64,15 @@ git clone https://github.com/your-username/travel-inventory-management.git
 ## Run the Angular App
 In a separate terminal window, navigate to the Angular project directory and start the Angular development server:
 
-cd path-to-angular-frontend
- `ng serve`
+cd path-to-angular-frontend 
+ `ng serve` 
+ypu will see http://localhost:4200
 
 ## Run the server
 cd path-to-angular-frontend
 cd backend
  `node server.js`
+ you will see http://localhost:3000 server connected
 
 ## Usage
 Once the server is running using  `node server.js `, navigate to http://localhost:4200 using  `ng serve ` to start using the system. You can:

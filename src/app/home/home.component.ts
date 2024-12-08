@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ResourceService, Resource } from '../services/resource.service';
 import { BookingService, Booking } from '../services/booking.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -28,11 +29,18 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private resourceService: ResourceService,
-    private bookingService: BookingService
+    private bookingService: BookingService,
+    private router: Router  
   ) {}
 
   ngOnInit(): void {
     this.loadResourcesAndBookings();
+  }
+
+
+  // ฟังก์ชันสำหรับนำทางไปยังหน้า booking detail
+  goToBookingDetail(bookingId: string): void {
+    this.router.navigate(['/booking/edit', bookingId]);  // ใช้ Router เพื่อไปที่ booking ID
   }
 
   // โหลดข้อมูล Resources และ Bookings พร้อมกัน

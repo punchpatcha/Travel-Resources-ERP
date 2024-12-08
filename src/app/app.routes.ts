@@ -10,6 +10,7 @@ import { EditVehiclesComponent } from './edit-vehicles/edit-vehicles.component';
 import { EditEquipmentComponent } from './edit-equipment/edit-equipment.component';
 import { EditStaffComponent } from './edit-staff/edit-staff.component';
 import { HomeComponent } from './home/home.component';
+import { ReportComponent } from './report/report.component';
 
 export const appRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -27,5 +28,7 @@ export const appRoutes: Routes = [
 
   { path: 'resource/edit-equipment/:id', component: EditEquipmentComponent },
   { path: 'resource/edit-staff/:id', component: EditStaffComponent },
+
+  {path:'report', component: ReportComponent}
 
 ];

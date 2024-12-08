@@ -1,0 +1,200 @@
+  
+ 
+  .table-container {
+    background-color: white;
+  }
+  
+  .table-container-header {
+    display: flex;
+    justify-content: space-between;
+  
+  }
+  
+  .table-container h1 {
+    margin: 30px 0px;
+    color: #5b5b5b;
+    font-size: 16px;
+    font-weight: 500;
+    padding-left: 20px;
+  }
+
+  .filter-container .dropdown{
+    margin: 30px 10px;
+    margin-bottom: 10px;
+    color: #5b5b5b;
+    font-size: 16px;
+    font-weight: 500;
+  
+    background-color: #ffffff;
+    border-color: #5b5b5b;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+  }
+
+  .filter-container .label{
+    color: #5b5b5b;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  thead {
+    background-color: #f9f9f9;
+  }
+  
+  th {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 13px;
+    font-weight: 500;
+    padding-left: 20px;
+  }
+  
+  td {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 13px;
+    font-weight: 400;
+    color: #5b5b5b;
+    padding-left: 20px;
+  }
+  
+  .status {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    text-align: center;
+  }
+  
+  .status-returned {
+    color: #77BFA3;
+    background-color: rgb(223, 255, 243);
+  }
+  
+  .status-booked {
+    color: #fa8621;
+    background-color: #ffebd7;
+  }
+  
+  .status-pending {
+    color: #f49459;
+    background-color: #fff4e6;
+  }
+  
+  .status-in-use {
+    color: #0F80F6;
+    background-color: #e3f1ff;
+  }
+  
+  .status-canceled {
+    color: #FF0000;
+    background-color: #ffe6e6;
+  }
+  
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    padding-right: 20px;
+    font-size: 10px;
+  }
+  
+  .pagination button {
+    border: 1px solid #CECECE; /* เพิ่มขอบสีเทา */
+    background-color: transparent; /* ทำให้พื้นหลังโปร่งใส */
+    color: #007bff; /* สีตัวอักษร */
+    padding: 5px 10px; /* ระยะห่างภายในปุ่ม */
+    margin: 5px 5px; /* ระยะห่างระหว่างปุ่ม */
+    border-radius: 4px; /* มุมโค้ง */
+    cursor: pointer; /* เปลี่ยนเคอร์เซอร์เมื่อเลื่อนมาบนปุ่ม */
+  }
+  
+  
+  .edit-btn:hover {
+    color: #007bff; /* เปลี่ยนสีเมื่อ hover */
+  }
+
+  .edit-btn {
+    background-color: transparent;
+    border: none;
+    color: #DDDDDD; /* สีของขอบ */
+    cursor: pointer;
+    transition: opacity 0.3s;
+ font-size: 32px;
+  }
+  
+  .edit-btn:hover {
+    opacity: 0.7; /* ลดความทึบเมื่อ hover */
+  }
+  
+  .edit-btn[disabled] {
+    cursor: not-allowed; /* เปลี่ยน cursor เมื่อปุ่มถูกปิดการใช้งาน */
+    opacity: 0.5; /* ทำให้ปุ่มดูจางลง */
+  }
+  
+  .edit-btn[disabled] .fa {
+    color: #DDDDDD; /* เปลี่ยนสีไอคอนเมื่อปุ่ม disabled */
+  }
+  
+
+  /* For smaller screens (mobile view) */
+  @media only screen and (max-width: 768px) {
+    .btn-new-booking {
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 13px;
+      margin: 20px;
+    }
+    
+    /* ทำให้ตารางสามารถเลื่อนแนวนอนได้เมื่อมีเนื้อหามากเกิน */
+    .table-container{
+      overflow-x: auto; /* เพิ่ม scroll แนวนอน */
+      font-size: 10px; /* ลดขนาดฟอนต์ในตาราง */
+      flex: 1;
+    }
+  
+    .table-container-header{
+      justify-content: flex-start;
+      align-content: center;
+    
+    }
+  
+    .table-container h1 {
+      font-size: 15px; /* ปรับให้เล็กลง */
+      margin-bottom: 10px;
+      align-content: center;
+      margin: 0;
+    }
+    .status {
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 10px;
+      text-align: center;
+    }
+    /* ปรับขนาดปุ่มใน pagination */
+    .pagination button {
+      padding: 2px 5px; /* ปรับให้ปุ่มเล็กลง */
+    }
+  
+    .pagination  {
+      right: inherit;
+    }
+  
+    /* ปรับขนาดฟอนต์ในตาราง */
+    th,
+    td {
+      font-size: 10px; /* ลดขนาดฟอนต์ในตาราง */
+      padding-left: 20px; /* ลด padding ในตาราง */
+    }
+  
+  }
+  

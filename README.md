@@ -1,59 +1,81 @@
+
+
 # TravelInventoryManagement
+## Overview
+Travel Inventory Management System is a web application developed to manage the inventory of vehicles, equipment, and staff for travel-related businesses. The application is designed to work across Android, iOS, and browsers, providing users with efficient tools to manage resources, bookings, and reports.
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.2.
+## Features
+### Home (Dashboard)
+- Current Availability: Displays resources that are available for use.
+- Inventory Summary: Shows a summary of all resources in the system, including those in use.
+- Low Stock Alert: Notifies users when resources are running low (fewer than 5 available).
+- Upcoming Bookings: Shows pending bookings and allows users to update their statuses.
+- Recent Activities: Displays recent activities in the system related to bookings.
+  To start a local development server, run:
 
-## Development server
+### Resource Management
+Manage the resources available in the system, which include:
 
-To start a local development server, run:
+- Vehicles: Manage vehicles like cars, boats, and vans.
+Add, edit, update, and delete vehicle details such as name, category, plate number, capacity, status, and maintenance dates.
+- Equipment: Manage equipment such as cameras, microphones, and bags.
+Add, edit, update, and delete equipment details.
+- Staff: Manage staff members, including roles and availability.
+Add, edit, update, and delete staff details such as name, role, and contact information.
 
-```bash
-ng serve
-```
+### Booking Management
+Handle bookings for resources with the following features:
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Add Booking: Users can add new bookings by selecting vehicles, equipment, and staff.
+Set start and end dates and confirm booking status (Pending, Booked, In Use, Returned).
+- Edit Booking: Users can edit booking details and update statuses.
+- Update Booking: After editing, users can update the booking and resource statuses.
+- Delete Booking: Users can delete bookings, and resources will be marked as available again.
 
-## Code scaffolding
+### Report Generation
+Generate monthly and yearly reports for bookings:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- Monthly Report: View bookings for a selected month in a specific year.
+- Yearly Report: View all bookings for a selected year.
 
-```bash
-ng generate component component-name
-```
+## Getting Started
+### Prerequisites
+Ensure you have the following installed:
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- Node.js
+- Express.js 
+- MongoDB (for storing data)
+- Postman (optional for testing API)
+- VS code (for running code to development)
 
-```bash
-ng generate --help
-```
+### Installation
+- Clone the repository
+git clone https://github.com/your-username/travel-inventory-management.git
 
-## Building
+- Navigate to the project directory:
+ `cd travel-inventory-management `
 
-To build the project run:
+-Install dependencies:
+ `npm install `
 
-```bash
-ng build
-```
+- Run the development server:
+ `npm start `
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Run the Angular App
+In a separate terminal window, navigate to the Angular project directory and start the Angular development server:
 
-## Running unit tests
+cd path-to-angular-frontend
+ `ng serve`
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Run the server
+cd path-to-angular-frontend
+cd backend
+ `node server.js`
 
-```bash
-ng test
-```
+## Usage
+Once the server is running using  `node server.js `, navigate to http://localhost:4200 using  `ng serve ` to start using the system. You can:
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- View the dashboard with an overview of resources.
+- Manage inventory resources (vehicles, equipment, and staff).
+- Make and manage bookings.
+- Generate reports for a specific month or year

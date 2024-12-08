@@ -4,92 +4,130 @@
   </div>
 
   <!-- Main Content -->
-  <div class="main-content">
-    <!-- Current Availability -->
-    <div class="card current-availability">
-      <h3>Current Availability</h3>
-      <div class="availability-grid">
-        <div class="availability-item">
-          <div class="number">{{ totalVehicle }}</div>
-          <div>Total Vehicles</div>
+  <div class="dashboard-container">
+    <!-- Row 1: Current Availability + Inventory Summary -->
+    <div class="row">
+      <div class="card current-availability" style="flex: 2">
+        <h3>Current Availability</h3>
+        <div class="availability-grid">
+          <div class="availability-item">
+            <div class="number">{{ totalVehicle }}</div>
+            <div class="text">Available Vehicles</div>
+          </div>
+          <div class="line"></div>
+          <div class="availability-item">
+            <div class="number">{{ totalEquipment }}</div>
+            <div class="text">Available Equipment</div>
+          </div>
+          <div class="line"></div>
+          <div class="availability-item">
+            <div class="number">{{ totalStaff }}</div>
+            <div class="text">Available Staff</div>
+          </div>
         </div>
-        <div class="availability-item">
-          <div class="number">{{ totalEquipment }}</div>
-          <div>Total Equipment</div>
-        </div>
-        <div class="availability-item">
-          <div class="number">{{ totalStaff }}</div>
-          <div>Total Staff</div>
+      </div>
+      <div class="card inventory-summary" style="flex: 2">
+        <h3>Inventory Summary</h3>
+        <div class="summary-content">
+          <div class="content-column">
+            <div class="availability-item">
+              <span class="text">Total Resources</span>
+              <span class="total">{{
+                totalVehicle + totalEquipment + totalStaff
+              }}</span>
+            </div>
+            <div class="availability-item">
+              <span class="text">Used Resources</span>
+              <span class="total">{{
+                lowStockVehicles + lowStockEquipment + lowStockStaff
+              }}</span>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <span class="circle">
+            <div class="circle-text">active</div>
+            <div class="circle-percentage">{{ activePercentage }}%</div>
+          </span>
         </div>
       </div>
     </div>
 
-    <!-- Inventory Summary -->
-    <div class="card inventory-summary">
-      <h3>Inventory Summary</h3>
-      <div class="summary-content">
-        <div>
-          <p>Total Resources</p>
-          <h2>{{ totalVehicle + totalEquipment + totalStaff }}</h2>
+    <!-- Row 2: Low Stock Alert + Upcoming Bookings -->
+    <div class="row">
+      <div class="card low-stock-alert" style="flex: 1">
+        <h3>Low Stock Alert</h3>
+        <div class="low-stock-alert-grid">
+          <div *ngIf="lowStockVehicles > 0" class="availability-item">
+            <span
+              class="label"
+              [ngClass]="{ 'low-stock-label': lowStockVehicles <= 5 }"
+              >Vehicles</span
+            >
+            <span
+              class="value"
+              [ngClass]="{ 'low-stock': lowStockVehicles <= 5 }"
+              >{{ lowStockVehicles }}</span
+            >
+          </div>
+          <div *ngIf="lowStockEquipment > 0" class="availability-item">
+            <span
+              class="label"
+              [ngClass]="{ 'low-stock-label': lowStockEquipment <= 5 }"
+              >Equipment</span
+            >
+            <span
+              class="value"
+              [ngClass]="{ 'low-stock': lowStockEquipment <= 5 }"
+              >{{ lowStockEquipment }}</span
+            >
+          </div>
+          <div *ngIf="lowStockStaff > 0" class="availability-item">
+            <span
+              class="label"
+              [ngClass]="{ 'low-stock-label': lowStockStaff <= 5 }"
+              >Staff</span
+            >
+            <span
+              class="value"
+              [ngClass]="{ 'low-stock': lowStockStaff <= 5 }"
+              >{{ lowStockStaff }}</span
+            >
+          </div>
         </div>
-        <div>
-          <p>Used Resources</p>
-          <h2>{{ lowStockVehicles + lowStockEquipment + lowStockStaff }}</h2>
-        </div>
-        <div class="progress-circle">
-          <div class="circle">{{ activePercentage }}%</div>
-        </div>
+      </div>
+      <div class="card upcoming-bookings" style="flex: 2">
+        <h3>Upcoming Bookings</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Resource Type</th>
+              <th>Resource Name/Details</th>
+              <th>Booked By</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let booking of recentActivities" (click)="goToBookingDetail(booking.bookingId)">
+              <td>{{ booking.startDate | date }}</td>
+              <td>{{ booking.type }}</td>
+              <td>{{ booking.category }}</td>
+              <td>{{ booking.customerName }}</td>
+              <td
+                [ngStyle]="{
+                  color: booking.status === 'Pending' ? '#F69459' : '#FF0043 '
+                }"
+              >
+                {{ booking.status }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <!-- Low Stock Alert -->
-    <div class="card low-stock-alert">
-    <div class="low-stock-alert">
-      <h3>Low Stock Alert</h3>
-      <div class="availability-grid">
-        <div *ngIf="lowStockVehicles > 0" class="availability-item">
-          <span class="label">Vehicles:</span>
-          <span class="value" [ngClass]="{'low-stock': lowStockVehicles <= 5}">{{ lowStockVehicles }}</span>
-        </div>
-        <div *ngIf="lowStockEquipment > 0" class="availability-item">
-          <span class="label">Equipment:</span>
-          <span class="value" [ngClass]="{'low-stock': lowStockEquipment <= 5}">{{ lowStockEquipment }}</span>
-        </div>
-        <div *ngIf="lowStockStaff > 0" class="availability-item">
-          <span class="label">Staff:</span>
-          <span class="value" [ngClass]="{'low-stock': lowStockStaff <= 5}">{{ lowStockStaff }}</span>
-        </div>
-      </div>
-    </div>
-    </div>
-
-    <!-- Upcoming Bookings -->
-    <div class="card">
-      <h3>Upcoming Bookings</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Resource Type</th>
-            <th>Resource Name/Details</th>
-            <th>Booked By</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let booking of bookings">
-            <td>{{ booking.startDate | date }}</td>
-            <td>{{ booking.details }}</td>
-            <td>{{ booking.customerName }}</td>
-            <td>{{ booking.status }}</td>
-            <td>Pending</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Recent Activities -->
-    <div class="card">
+    <!-- Row 3: Recent Activities -->
+    <div class="card recent-activities" style="flex: 1 1 100%">
       <h3>Recent Activities</h3>
       <table>
         <thead>
@@ -102,12 +140,27 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let activity of recentActivities">
-            <td>{{ activity.date | date }}</td>
-            <td>{{ activity.type }}</td>
-            <td>{{ activity.details }}</td>
-            <td>{{ activity.bookedBy }}</td>
-            <td>{{ activity.action }}</td>
+          <tr *ngFor="let booking of combinedBookings">
+            <td>{{ booking.startDate | date }}</td>
+            <td>{{ booking.type }}</td>
+            <td>{{ booking.category }}</td>
+            <td>{{ booking.customerName }}</td>
+            <td
+              [ngStyle]="{
+                color:
+                  booking.status === 'Returned'
+                    ? '#77BFA3 '
+                    : booking.status === 'Pending'
+                    ? '#F69459'
+                    : booking.status === 'In-Use'
+                    ? '#3390F8 '
+                    : booking.status === 'Booked'
+                    ? '##FA8B29  '
+                    : '#FF0043 '
+              }"
+            >
+              {{ booking.status }}
+            </td>
           </tr>
         </tbody>
       </table>

@@ -54,7 +54,7 @@ export class ResourceComponent implements OnInit {
         if (this.selectedView === 'vehicles') {
           return 'plateNumber' in item; // ตรวจสอบว่าเป็น vehicle หรือไม่
         } else if (this.selectedView === 'equipment') {
-          return !('plateNumber' in item) && !('role' in item);// ตรวจสอบว่าเป็น equipment หรือไม่
+          return !('plateNumber' in item) && !('role' in item);
         } else {
           return 'role' in item;
         }

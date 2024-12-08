@@ -1,141 +1,235 @@
+/* General Styles */
 .dashboard {
-    padding: 20px;
-  }
+  padding: 20px;
+  max-width: 1200px;
+}
+
+h1 {
+  text-align: left;
+  font-size: 16px;
+  font-weight: 500;
+  color: #5b5b5b;
+  margin-bottom: 16px;
+}
+
+/* Card Styles */
+.card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+/* Grid Layout */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.card.current-availability {
+  align-items: center;
+  justify-content: center;
+}
+
+.card.inventory-summary {
+  justify-content: space-around;
+  align-items: center;
+}
+
+.card.low-stock-alert,
+.card.upcoming-bookings {
+  flex: 1;
+}
+
+.card.recent-activities {
+  flex: 1 1 100%;
+}
+
+/* Inner Content Styles */
+.availability-grid {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 10px;
+  margin-top: 10px;
+}
+
+.availability-item {
+  text-align: center;
+}
+.summary-content .availability-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+span.total {
+  font-size: 20px; /* ขนาดฟอนต์สำหรับตัวเลข */
+  font-weight: 500; /* ทำให้ตัวเลขดูเด่นขึ้น */
+}
+
+div.number {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.text {
+  font-size: 13px;
+  color: #5b5b5b;
+  font-weight: 500;
+}
+
+.line {
+  height: 50px;
+  width: 1px;
+  background-color: #ddd;
+}
+
+/* Low Stock Alert */
+.low-stock-alert-grid .availability-item {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.low-stock-alert-grid {
+  padding: 20px 20px;
+}
+
+
+.low-stock {
+  color: red;
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.low-stock-label{
+  font-size: 13px;
+  color: #5b5b5b;
+  font-weight: 500;
+}
+
+/* Inventory Summary */
+.summary-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 20px 10px;
+}
+
+.content-column.availability-item{
+  padding: 0;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+}
+.divider {
+  width: 1px; /* ความหนาเส้น divider */
+  height: 80px; /* กำหนดความสูงเท่ากับ circle */
+  background-color: #ddd; /* สี divider */
+}
+
+.circle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: conic-gradient(#98ed9b 90%, #eeffee 0%);
+  font-weight: 500;
+  text-align: center;
   
-  .header h1 {
-    text-align: center;
-  }
-  
-  .dashboard-container {
-    display: flex;
+}
+
+.circle-text {
+  font-size: 10px; /* ขนาดเล็กกว่าเพื่อให้แสดงชัด */
+  color: #333;
+}
+
+.circle-percentage {
+  font-size: 13px;
+  font-weight: 500;
+  color: #000;
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+  font-size: 13px;
+  color: #5b5b5b;
+
+}
+
+table th {
+  background-color: #f3f3f3;
+  font-weight: 500;
+ 
+
+}
+
+
+h3 {
+  margin: 0;
+  font-weight: 500;
+  font-size: 16px;
+  background-color: #edede9;
+  border: 1px solid #cecece;
+  border-start-start-radius: 10px;
+  border-top-right-radius: 10px;
+  padding: 10px 20px;
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 800px) {
+  .row {
     flex-direction: column;
-    gap: 20px;
-    padding: 20px;
+    overflow-x: auto ;
   }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+
+  .card {
+    flex: 1 1 100%;
+    overflow-x: auto ;
   }
-  
-  .actions {
+
+  .availability-grid {
     display: flex;
+    justify-content: space-evenly;
     align-items: center;
     gap: 10px;
-  }
-  
-  .add-button {
-    width: 40px;
-    height: 40px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    font-size: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-  
-  .profile-circle {
-    width: 40px;
-    height: 40px;
-    background-color: #ccc;
-    border-radius: 50%;
-  }
-  
-  .main-content {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-  }
-  
-  .card {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .current-availability .availability-grid {
-    display: flex;
-    gap: 20px;
-  }
-  
-  .availability-item {
-    text-align: center;
-  }
-  
-  .availability-item .number {
-    font-size: 24px;
-    font-weight: bold;
-  }
-  
-  .inventory-summary .summary-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    margin: 0;
+    padding: 20px 10px;
   }
 
+  @media (max-width: 600px) {
+    table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
   
+    table th,
+    table td {
+      white-space: nowrap; /* ป้องกันการบรรทัดใหม่ในเซลล์ */
+    }
   
-  .low-stock-alert {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .low-stock-alert .availability-item {
-    display: flex;
-    justify-content: space-between; /* Ensure the text is left and number is right */
-    width: 100%; /* Ensure the items take the full width of the container */
-    margin-bottom: 10px;
-  }
-  
-  .low-stock-alert .availability-item .label {
-    font-weight: normal;
-  }
-  
-  .low-stock-alert .availability-item .value {
-    font-weight: bold;
-  }
-  
-  .low-stock {
-    color: red;
-  }
 
-  .progress-circle {
-    position: relative;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: conic-gradient(#28a745 90%, #ddd 0%);
-  }
-  
-  .progress-circle .circle {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    font-weight: bold;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  table th, table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-  
-  table th {
-    background-color: #f4f4f4;
   }
   
   
+}

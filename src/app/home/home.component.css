@@ -113,6 +113,17 @@ div.number {
   font-weight: 500;
 }
 
+.label{
+  font-size: 13px;
+  color: #5b5b5b;
+  font-weight: 500;
+}
+
+.card.upcoming-bookings table tbody tr:hover {
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
 /* Inventory Summary */
 .summary-content {
   display: flex;

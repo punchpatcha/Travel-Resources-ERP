@@ -129,12 +129,18 @@ export class EditVehiclesComponent implements OnInit {
   }
   
   // ตรวจสอบความซ้ำซ้อนของ plateNumber
-  isPlateNumberUnique(plateNumber: string): Promise<boolean> {
+  isPlateNumberUnique(plateNumber: string, currentResourceId: string | null): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this.resourceService.getAvailableResources({ type: 'Vehicles' }).subscribe(
         (data) => {
-          const existingPlateNumbers = data.map((item) => item.plateNumber);
-          resolve(!existingPlateNumbers.includes(plateNumber));
+          const existingResource = data.find((item) => item.plateNumber === plateNumber);
+  
+          // อนุญาตหากหมายเลขทะเบียนเป็นของทรัพยากรปัจจุบัน
+          if (existingResource && existingResource._id === currentResourceId) {
+            resolve(true);
+          } else {
+            resolve(!existingResource);
+          }
         },
         (error) => {
           console.error('Error checking plate numbers:', error);
@@ -143,8 +149,8 @@ export class EditVehiclesComponent implements OnInit {
       );
     });
   }
-
-  // Save updated vehicle
+  
+  // ปรับปรุงใน saveVehicle
   saveVehicle(updatedResource: Resource): void {
     const plateNumber = updatedResource.plateNumber ?? ''; // กำหนดค่าเริ่มต้นหาก plateNumber เป็น undefined
   
@@ -161,7 +167,7 @@ export class EditVehiclesComponent implements OnInit {
     }
   
     // ตรวจสอบความซ้ำซ้อนของ plateNumber
-    this.isPlateNumberUnique(plateNumber).then((isUnique) => {
+    this.isPlateNumberUnique(plateNumber, this.resourceId).then((isUnique) => {
       if (!isUnique) {
         alert('Plate number already exists. Please use a unique plate number.');
         return;
